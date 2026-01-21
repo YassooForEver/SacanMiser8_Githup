@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SacanMiser8 V25 Fixed</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --bg-body: #000000;
+      --card-bg: #1c1c1e;
+      --glass-bg: rgba(44, 44, 46, 0.95);
+      --border-glass: 1px solid rgba(255, 255, 255, 0.15);
+      --text-main: #FFFFFF;
+      --text-sub: #8E8E93;
+      --accent: #0A84FF;
+      --success: #30D158;
+      --danger: #FF453A;
+      --warning: #FFD60A;
+      --shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --glass-bg: rgba(255, 255, 255, 0.95);
+      --border-glass: 1px solid rgba(0, 0, 0, 0.1);
+      --text-main: #000000;
+      --text-sub: #666;
+      --shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding-bottom: 120px; 
+      min-height: 100vh;
+      transition: background 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ios-card {
+      background: var(--card-bg);
+      border: var(--border-glass); border-radius: 20px;
+      padding: 18px; margin-bottom: 15px; box-shadow: var(--shadow);
+    }
+
+    .header {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      position: sticky; top: 0; z-index: 1000;
+      padding: 15px 20px; border-bottom: var(--border-glass);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .b-item {
+      background: rgba(125,125,125,0.1);
+      border: var(--border-glass); border-radius: 16px;
+      padding: 12px 5px; text-align: center;
+      transition: 0.2s; cursor: pointer;
+    }
+    .b-item:active { transform: scale(0.96); }
+    .b-item.my-b { border: 2px solid var(--accent); box-shadow: 0 0 15px rgba(10, 132, 255, 0.3); }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-bottom: 5px; }
+    .dot-green { background: var(--success); box-shadow: 0 0 8px var(--success); }
+    .dot-red { background: var(--danger); }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .unit-box {
+      aspect-ratio: 1; border-radius: 12px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      font-weight: bold; color: white; cursor: pointer;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .u-txt { font-size: 9px; background: rgba(0,0,0,0.6); padding: 2px 6px; border-radius: 6px; margin-top: 3px; }
+    
+    .bg-green { background: linear-gradient(135deg, #30D158, #20AA45); }
+    .bg-red { background: linear-gradient(135deg, #FF453A, #D6352C); }
+    .bg-yellow { background: linear-gradient(135deg, #FFD60A, #F0B90B); color: black; text-shadow: none; }
+
+    .tab-bar {
+      position: fixed; bottom: 20px; left: 5%; width: 90%;
+      background: var(--glass-bg); backdrop-filter: blur(30px);
+      border-radius: 40px; border: var(--border-glass);
+      display: flex; justify-content: space-around;
+      padding: 12px 0; z-index: 2000;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .tab-item { background: none; border: none; color: var(--text-sub); font-size: 10px; display: flex; flex-direction: column; align-items: center; }
+    .tab-item.active { color: var(--accent); transform: translateY(-3px); transition: 0.3s; }
+    .tab-item i { font-size: 22px; margin-bottom: 4px; }
+
+    .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 250px; overflow-y: auto; margin-bottom: 15px; }
+    .check-item { background: rgba(125,125,125,0.1); padding: 10px; border-radius: 10px; text-align: center; }
+    .check-item input { transform: scale(1.3); margin-bottom: 5px; accent-color: var(--danger); }
+
+    #loginScreen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px); background-size: 30px 30px;
+    }
+    .login-inp {
+      background: rgba(255,255,255,0.1); border: 1px solid #333; color: white;
+      padding: 16px; border-radius: 14px; width: 85%; text-align: center;
+      margin-bottom: 12px; font-size: 16px; outline: none;
+    }
+    .login-btn {
+      background: var(--accent); color: white; border: none;
+      padding: 16px; width: 85%; border-radius: 14px; font-weight: bold; font-size: 18px;
+    }
+
+    .bell-wrap { position: relative; cursor: pointer; padding: 5px; }
+    .bell-badge {
+      position: absolute; top: -2px; right: -2px; background: var(--danger); color: white;
+      width: 18px; height: 18px; border-radius: 50%; font-size: 10px;
+      display: flex; align-items: center; justify-content: center; border: 2px solid #000;
+    }
+    .shake { animation: shake 1.5s infinite; }
+    @keyframes shake { 0%,100%{transform:rotate(0)} 10%,30%,50%,70%,90%{transform:rotate(-15deg)} 20%,40%,60%,80%{transform:rotate(15deg)} }
+
+    .modal-content { background: var(--card-bg); border: var(--border-glass); color: var(--text-main); border-radius: 20px; }
+    .modal-body { padding-bottom: 100px; } 
+    
+    .chart-legend { display: flex; justify-content: space-around; margin-top: 15px; font-size: 12px; font-weight: bold; }
+    .legend-item span { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-left: 5px; }
+
+    /* Fix Dark Mode */
+    body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, span, div, label {
+      color: var(--text-main) !important;
+    }
+    .form-control, .form-select {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: #ffffff !important;
+    }
+    [data-theme="light"] .form-control, [data-theme="light"] .form-select {
+      background-color: #ffffff !important;
+      border: 1px solid #ced4da !important;
+      color: #000000 !important;
+    }
+    .table {
+      color: var(--text-main) !important;
+      --bs-table-color: var(--text-main) !important;
+      --bs-table-bg: transparent !important;
+    }
+    .btn-close {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+    [data-theme="light"] .btn-close {
+      filter: none;
+    }
+
+  </style>
+</head>
+<body data-theme="light">
+
+  <div id="loginScreen">
+    <img src="Logo.jpg" alt="Logo" style="width: 120px; height: auto; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(10, 132, 255, 0.3);">
+    <h2 class="text-white fw-bold mb-4" style="font-size: 24px;">كمبوند سكن مصر <span style="color:var(--accent)">مسلسل 8</span></h2>
+    <div id="loginClock" class="text-white fw-bold mb-5" style="font-size: 40px; font-family: monospace;">00:00</div>
+
+    <input type="text" id="userInput" class="login-inp" placeholder="اسم المستخدم">
+    <input type="password" id="passInput" class="login-inp" placeholder="كلمة المرور">
+    <button onclick="login()" class="login-btn">دخول النظام</button>
+    <div id="loginErr" class="text-danger mt-3 fw-bold small"></div>
+  </div>
+
+  <div class="header">
+    <div class="d-flex align-items-center gap-2">
+      <img src="Logo.jpg" alt="Logo" style="height: 45px; width: auto; border-radius: 8px;">
+      <div style="line-height:1.1">
+        <div class="fw-bold" style="font-size:14px">كمبوند سكن مصر مسلسل 8</div>
+        <div id="roleDisplay" style="font-size:10px; color:var(--accent)">...</div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <i class="fas fa-adjust fs-5" style="cursor:pointer" onclick="toggleTheme()"></i>
+
+      <div id="adminBell" class="bell-wrap" style="display:none" onclick="showNotifs()">
+        <i class="fas fa-bell fs-5"></i>
+        <div id="notifBadge" class="bell-badge" style="display:none">0</div>
+      </div>
+
+      <div class="text-end lh-1">
+        <div id="headTime" class="fw-bold" style="font-family:monospace; font-size:15px;">00:00</div>
+        <div id="headDate" style="font-size:9px; color:var(--text-sub)">...</div>
+      </div>
+
+      <i class="fas fa-power-off fs-5 text-danger" style="cursor:pointer" onclick="logout()"></i>
+    </div>
+  </div>
+
+  <div class="container pt-3" id="app" style="display:none">
+
+    <div id="tab-home">
+     <div class="ios-card text-center">
+        <div class="row">
+          <div class="col-4 border-end" style="border-color:var(--border-glass)">
+            <small class="text-sub" style="font-size:10px">الخزنة</small>
+            <div id="dSafe" class="fw-bold text-success" style="font-size:18px">0</div>
+          </div>
+          
+          <div class="col-4 border-end" style="border-color:var(--border-glass)">
+            <small class="text-sub" style="font-size:10px">تبرعات</small>
+            <div id="dDonations" class="fw-bold text-warning" style="font-size:18px">0</div>
+          </div>
+
+          <div class="col-4">
+            <small class="text-sub" style="font-size:10px">مديونية</small>
+            <div id="dDebt" class="fw-bold text-danger" style="font-size:18px">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ios-card">
+        <h6 class="fw-bold mb-3 text-start"><i class="fas fa-chart-pie me-2"></i>تحليل مالي</h6>
+        <div style="height: 200px;"><canvas id="chart"></canvas></div>
+        <div class="chart-legend">
+          <div class="legend-item" style="color:var(--success)"><span style="background:var(--success)"></span>تحصيل: <b id="legInc">0</b></div>
+          <div class="legend-item" style="color:var(--danger)"><span style="background:var(--danger)"></span>مصروف: <b id="legExp">0</b></div>
+          <div class="legend-item" style="color:var(--accent)"><span style="background:var(--accent)"></span>دين: <b id="legDebt">0</b></div>
+        </div>
+      </div>
+
+      <div class="ios-card p-0 overflow-hidden">
+        <div class="p-3 border-bottom" style="border-color:var(--border-glass)">
+          <h6 class="m-0 fw-bold text-warning"><i class="fas fa-crown me-2"></i>الأكثر التزاماً</h6>
+        </div>
+        <div style="max-height: 250px; overflow-y: auto;">
+          <table class="table mb-0 small" style="color:var(--text-main); --bs-table-bg:transparent">
+            <tbody id="leaderboard"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-buildings" style="display:none">
+      <h6 class="fw-bold mb-3 px-2 border-start border-4 border-primary">حالة العمارات (27)</h6>
+      <div class="grid-3" id="bGrid"></div>
+    </div>
+
+    <div id="tab-expenses" style="display:none">
+      
+      <div class="ios-card d-flex justify-content-between align-items-center">
+        <div>
+          <small class="text-sub">إجمالي المصروفات</small>
+          <div id="dExpTotal" class="fs-4 fw-bold text-danger">0</div>
+        </div>
+        <button id="excelBtn" onclick="exportXLS()" class="btn btn-sm btn-success rounded-pill px-3" style="display:none">Excel</button>
+      </div>
+
+      <div id="donationCard" class="ios-card" style="display:none; border-left: 4px solid var(--success)">
+        <h6 class="text-success fw-bold mb-3">💰 تسجيل إيراد خارجي / تبرع</h6>
+        <div class="row g-2">
+          <div class="col-8"><input type="text" id="donDesc" class="form-control" placeholder="مصدر التبرع/الإيراد"></div>
+          <div class="col-4"><input type="number" id="donAmt" class="form-control" placeholder="المبلغ"></div>
+          <div class="col-12"><button onclick="saveDonation()" class="btn btn-success w-100 fw-bold">إضافة للخزنة</button></div>
+        </div>
+      </div>
+      
+      <div id="addCard" class="ios-card" style="display:none; border-left: 4px solid var(--danger)">
+        <h6 class="text-danger fw-bold mb-3">تسجيل مصروف جديد</h6>
+        <div class="row g-2">
+          <div class="col-8"><input type="text" id="exDesc" class="form-control" placeholder="الوصف"></div>
+          <div class="col-4"><input type="number" id="exAmt" class="form-control" placeholder="المبلغ"></div>
+          <div class="col-12"><select id="exType" class="form-select"></select></div>
+          <div class="col-12"><button onclick="saveExp()" class="btn btn-danger w-100 fw-bold">حفظ</button></div>
+        </div>
+      </div>
+
+      <div class="ios-card p-0 overflow-hidden">
+        <table class="table table-striped mb-0 small" style="color:var(--text-main); --bs-table-bg:transparent">
+          <thead><tr><th>التاريخ</th><th>البند</th><th>المبلغ</th></tr></thead>
+          <tbody id="expTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-settings" style="display:none">
+      
+      <div id="adminControlPanel" style="display:none">
+        <div class="ios-card border border-warning mb-3">
+          <h6 class="text-warning fw-bold mb-3"><i class="fas fa-edit me-2"></i>قيمة التحصيل (شهر/عمارة)</h6>
+          <div class="d-flex gap-2">
+            <input type="number" id="targetInput" class="form-control text-center fw-bold" placeholder="500">
+            <button onclick="updateTarget()" class="btn btn-warning fw-bold">حفظ</button>
+          </div>
+          <small class="text-muted mt-2 d-block">* سيتم تغيير الحسابات لكل العمارات</small>
+        </div>
+        <div class="ios-card border border-info mb-3">
+          <h6 class="text-info fw-bold mb-3"><i class="fas fa-shield-alt me-2"></i>النسخ الاحتياطي والاستعادة</h6>
+          <div class="d-flex gap-2">
+            <button onclick="backupSystem()" class="btn btn-outline-info w-50 fw-bold"><i class="fas fa-download me-2"></i>نسخ Backup</button>
+            <button onclick="document.getElementById('restoreFile').click()" class="btn btn-outline-warning w-50 fw-bold"><i class="fas fa-upload me-2"></i>استعادة Restore</button>
+            <input type="file" id="restoreFile" style="display:none" onchange="restoreSystem(this)">
+          </div>
+        </div>
+
+        <div class="ios-card border border-danger">
+          <h6 class="text-danger fw-bold mb-3"><i class="fas fa-radiation me-2"></i>منطقة الخطر</h6>
+          <button onclick="resetSystem()" class="btn btn-outline-danger w-100 mb-3 fw-bold">تصفير النظام بالكامل</button>
+          <hr style="border-color:var(--border-glass)">
+          <h6 class="mb-2 text-warning small">تصفير عمارات محددة:</h6>
+          <div class="checkbox-grid mb-3" id="resetCheckGrid"></div>
+          <button onclick="resetSelected()" class="btn btn-warning w-100 fw-bold text-dark">تصفير المحدد</button>
+        </div>
+      </div>
+
+      <div id="repControlPanel" style="display:none">
+        <div class="ios-card">
+          <h6 class="fw-bold mb-3">إدارة عمارتي</h6>
+          <button onclick="resetMyBuilding()" class="btn btn-outline-danger w-100 mb-3">
+            <i class="fas fa-trash me-2"></i> تصفير ديون العمارة
+          </button>
+        </div>
+        <div class="ios-card p-0 overflow-hidden">
+          <div class="p-3 border-bottom" style="border-color:var(--border-glass)">
+            <h6 class="m-0 text-success small fw-bold">أفضل 5 شقق (سداداً)</h6>
+          </div>
+          <table class="table mb-0 small" style="color:var(--text-main); --bs-table-bg:transparent"><tbody id="topUnits"></tbody></table>
+        </div>
+        <div class="ios-card p-0 overflow-hidden mt-3">
+          <div class="p-3 border-bottom" style="border-color:var(--border-glass)">
+            <h6 class="m-0 text-danger small fw-bold">أكثر 5 شقق (مديونية)</h6>
+          </div>
+          <table class="table mb-0 small" style="color:var(--text-main); --bs-table-bg:transparent"><tbody id="lazyUnits"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" id="bModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header border-bottom" style="border-color:var(--border-glass)">
+          <h5 class="modal-title fw-bold" id="mTitle">عمارة X</h5>
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+        </div>
+        <div class="modal-body">
+          <div class="grid-4" id="mGrid"></div>
+          
+          <div class="mt-5 pt-3 border-top" style="border-color:var(--border-glass); display:none" id="repAction">
+             <button id="notifyBtn" onclick="sendNotify()" class="btn btn-warning w-100 fw-bold py-3 rounded-4 shadow">
+               <i class="fas fa-bell me-2"></i> إبلاغ الإدارة بالتمام
+             </button>
+             <div id="notifyMsg" class="text-center text-success mt-2 fw-bold small" style="display:none">تم الإرسال ✅</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-bar" id="navBar" style="display:none">
+    <button class="tab-item active" onclick="goTab('home', this)"><i class="fas fa-chart-pie"></i><span>الرئيسية</span></button>
+    <button class="tab-item" onclick="goTab('buildings', this)"><i class="fas fa-building"></i><span>العمارات</span></button>
+    <button class="tab-item" onclick="goTab('expenses', this)"><i class="fas fa-wallet"></i><span>المصاريف</span></button>
+    <button class="tab-item" onclick="goTab('settings', this)"><i class="fas fa-cog"></i><span>إعدادات</span></button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const DB_URL = 'https://awtnljsrywkxhvxtjwlo.supabase.co';
+    const DB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3dG5sanNyeXdreGh2eHRqd2xvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzEwMjMsImV4cCI6MjA4NDUwNzAyM30.UacBpwAmEjmbGlM3eQwNolr7uRnTFU3Idq8dNPCOwYU';
+    let TARGET_BUILDING = localStorage.getItem('sakanTarget') ? parseInt(localStorage.getItem('sakanTarget')) : 500;
+
+    const USERS = {
+      'admin1': { p: 'Adm!n@88', role: 'admin', name: 'المدير العام 🛡️' },
+      'admin': { p: '123', role: 'admin', name: 'تجربة مدير' }, 
+    };
+    for(let i=1; i<=27; i++) USERS[`b${i}`] = { p: `x7#mP${i}`, role: 'rep', bId: i, name: `ممثل عمارة ${i} 👤` };
+    USERS['b1'].p = 'x7#mP1'; 
+
+    let _supa = null;
+    let currentUser = null;
+    let localData = {};
+    let chartInstance = null;
+    let notifs = [];
+
+    function updateClock() {
+      const n = new Date();
+      const t = n.toLocaleTimeString('en-US', {hour12:true, hour:'2-digit', minute:'2-digit', second:'2-digit'});
+      const d = n.toLocaleDateString('ar-EG');
+      document.getElementById('loginClock').innerText = t;
+      document.getElementById('headTime').innerText = t;
+      document.getElementById('headDate').innerText = d;
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    function toggleTheme() {
+      const b = document.body;
+      b.dataset.theme = b.dataset.theme === 'light' ? 'dark' : 'light';
+    }
+
+    function login() {
+      const u = document.getElementById('userInput').value.trim().toLowerCase();
+      const p = document.getElementById('passInput').value.trim();
+      const user = USERS[u];
+
+      if(user && user.p === p) {
+        if(navigator.vibrate) navigator.vibrate(50);
+        currentUser = user;
+        
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        document.getElementById('navBar').style.display = 'flex';
+        document.getElementById('roleDisplay').innerText = user.name;
+        document.getElementById('targetInput').value = TARGET_BUILDING;
+
+        if(!_supa) _supa = window.supabase.createClient(DB_URL, DB_KEY);
+
+        if(user.role === 'admin') {
+          document.getElementById('addCard').style.display = 'block';
+          document.getElementById('excelBtn').style.display = 'block';
+          document.getElementById('adminBell').style.display = 'flex';
+          document.getElementById('adminControlPanel').style.display = 'block';
+          document.getElementById('donationCard').style.display = 'block';
+          fillExpSelect();
+          fillResetChecks();
+        } else {
+          document.getElementById('addCard').style.display = 'none';
+          document.getElementById('excelBtn').style.display = 'none';
+          document.getElementById('adminBell').style.display = 'none';
+          document.getElementById('repControlPanel').style.display = 'block';
+          document.getElementById('donationCard').style.display = 'none';
+        }
+        refreshData();
+      } else {
+        if(navigator.vibrate) navigator.vibrate([50,50]);
+        document.getElementById('loginErr').innerText = "بيانات خاطئة";
+      }
+    }
+    function logout() { location.reload(); }
+
+    async function refreshData() {
+      const { data: inc } = await _supa.from('income_transactions').select('*');
+      const { data: exp } = await _supa.from('expense_transactions').select('*');
+
+      let tInc = 0; 
+      let bInc = 0; 
+      let tExp = 0;
+      let buildings = {};
+      let alerts = [];
+      let tableList = []; 
+
+      for(let i=1; i<=27; i++) buildings[i] = { id: i, paid: 0, units: {} };
+
+      if(inc) inc.forEach(t => {
+        tInc += t.amount;
+        
+        if(t.building_id && t.building_id > 0) { 
+            bInc += t.amount;
+            if(buildings[t.building_id]) {
+                buildings[t.building_id].paid += t.amount;
+                if(t.notes && t.notes.includes('unit_')) {
+                    const u = parseInt(t.notes.split('unit_')[1]);
+                    buildings[t.building_id].units[u] = (buildings[t.building_id].units[u]||0) + t.amount;
+                }
+            }
+        } else {
+            tableList.push({
+                date: t.created_at,
+                desc: t.notes || 'إيراد خارجي',
+                amount: t.amount,
+                type: 'income'
+            });
+        }
+      });
+
+      if(exp) exp.forEach(e => {
+        if(e.category === 'alert') alerts.push(e);
+        else { 
+            tExp += e.amount; 
+            tableList.push({
+                date: e.created_at,
+                desc: e.description,
+                amount: e.amount,
+                type: 'expense'
+            });
+        }
+      });
+
+      const safe = tInc - tExp; 
+      const totalRequired = 27 * TARGET_BUILDING;
+      const debt = totalRequired - bInc; 
+      const totalDonations = tInc - bInc;
+
+      document.getElementById('dSafe').innerText = safe.toLocaleString();
+      document.getElementById('dDebt').innerText = debt.toLocaleString();
+      document.getElementById('dDonations').innerText = totalDonations.toLocaleString();
+      document.getElementById('dExpTotal').innerText = tExp.toLocaleString();
+      document.getElementById('legInc').innerText = tInc.toLocaleString();
+      document.getElementById('legExp').innerText = tExp.toLocaleString();
+      document.getElementById('legDebt').innerText = debt.toLocaleString();
+
+      localData = buildings;
+      notifs = alerts;
+
+      renderChart(tInc, tExp, debt);
+      renderLeaderboard(buildings);
+      renderBuildings(buildings);
+      renderExp(tableList);
+      
+      if(currentUser && currentUser.role === 'rep') updateRepStats(buildings[currentUser.bId]);
+      if(currentUser && currentUser.role === 'admin') updateBell();
+    }
+
+    function renderChart(inc, exp, debt) {
+      const ctx = document.getElementById('chart').getContext('2d');
+      if(chartInstance) chartInstance.destroy();
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['محصل', 'مصروف', 'مديونية'],
+          datasets: [{ data: [inc, exp, debt], backgroundColor: ['#30D158', '#FF453A', '#0A84FF'], borderWidth: 0 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    }
+
+    function renderBuildings(bData) {
+      let h = '';
+      for(let i=1; i<=27; i++) {
+        const b = bData[i];
+        const pct = (b.paid / TARGET_BUILDING) * 100;
+        let color = "text-muted", msg = "بداية موفقة 🌱";
+        
+        if(pct >= 100) { color = "text-success fw-bold"; msg = "ممتاز! 🏆"; }
+        else if(pct > 50) { color = "text-warning fw-bold"; msg = "شد حيلك 💪"; }
+        
+        const myClass = (currentUser.role === 'rep' && currentUser.bId === i) ? 'my-b' : '';
+        const dot = pct>=100 ? 'dot-green' : 'dot-red';
+
+        h += `
+          <div class="b-item ${myClass}" onclick="openB(${i})">
+            <div class="mb-1"><span class="status-dot ${dot}"></span></div>
+            <div class="fw-bold">ع ${i}</div>
+            <div class="small fw-bold mt-1">${(b.paid/1000).toFixed(1)}k</div>
+            <div style="font-size:9px" class="${color} mt-1">${msg}</div>
+          </div>`;
+      }
+      document.getElementById('bGrid').innerHTML = h;
+    }
+
+    function openB(id) {
+      if(currentUser.role !== 'admin' && currentUser.bId !== id) {
+        if(navigator.vibrate) navigator.vibrate(100);
+        return alert("⛔ غير مسموح لك بدخول هذه العمارة");
+      }
+
+      const b = localData[id];
+      document.getElementById('mTitle').innerText = "عمارة " + id;
+      
+      const TARGET_UNIT = TARGET_BUILDING / 24;
+
+      let grid = '';
+      for(let u=1; u<=24; u++) {
+        const paid = b.units[u] || 0;
+        const remaining = Math.max(0, TARGET_UNIT - paid);
+        let cls = 'bg-red', txt = `عليه ${Math.ceil(remaining)}`;
+        
+        if(paid >= (TARGET_UNIT - 0.5)) { 
+            cls = 'bg-green'; txt = 'خالص ✅'; 
+        } else if(paid > 0) { 
+            cls = 'bg-yellow'; txt = `باقي ${Math.ceil(remaining)}`; 
+        }
+
+        grid += `
+          <div class="unit-box ${cls}" onclick="pay(${id}, ${u})">
+            <span>${u}</span><span class="u-txt">${txt}</span>
+          </div>`;
+      }
+      document.getElementById('mGrid').innerHTML = grid;
+      
+      if(currentUser.role === 'rep') document.getElementById('repAction').style.display = 'block';
+      else document.getElementById('repAction').style.display = 'none';
+
+      document.getElementById('notifyMsg').style.display = 'none';
+      new bootstrap.Modal(document.getElementById('bModal')).show();
+    }
+
+    async function pay(bId, uId) {
+      const amt = prompt(`دفع للشقة ${uId} (عمارة ${bId}):`);
+      if(!amt) return;
+      
+      const note = `unit_${uId} - (${currentUser.name})`;
+      await _supa.from('income_transactions').insert({building_id: bId, amount: amt, notes: note});
+      alert("تم الحفظ!"); refreshData();
+      bootstrap.Modal.getInstance(document.getElementById('bModal')).hide();
+    }
+
+    async function backupSystem() {
+      if(!confirm("تحميل نسخة احتياطية؟")) return;
+      const { data: inc } = await _supa.from('income_transactions').select('*');
+      const { data: exp } = await _supa.from('expense_transactions').select('*');
+      
+      const backupData = { income: inc, expense: exp, date: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(backupData)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SacanMiser_Backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    async function restoreSystem(input) {
+      if(!input.files[0]) return;
+      if(!confirm("⚠️ تحذير: سيتم مسح البيانات الحالية واستبدالها بالنسخة!")) return;
+      
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          await _supa.from('income_transactions').delete().neq('id', 0);
+          await _supa.from('expense_transactions').delete().neq('id', 0);
+          
+          const cleanInc = data.income.map(({id, ...rest}) => rest);
+          const cleanExp = data.expense.map(({id, ...rest}) => rest);
+          
+          if(cleanInc.length) await _supa.from('income_transactions').insert(cleanInc);
+          if(cleanExp.length) await _supa.from('expense_transactions').insert(cleanExp);
+          
+          alert("تمت الاستعادة بنجاح! ✅");
+          location.reload();
+        } catch(err) {
+          alert("خطأ في الملف! ❌");
+          console.error(err);
+        }
+      };
+      reader.readAsText(input.files[0]);
+    }
+
+    async function sendNotify() {
+      const msg = `🔔 عمارة ${currentUser.bId} تبلغ بتمام التحصيل!`;
+      await _supa.from('expense_transactions').insert({ amount: 0, description: msg, category: 'alert', is_general: true });
+      document.getElementById('notifyMsg').style.display = 'block';
+    }
+
+    function updateBell() {
+      const cnt = notifs.length;
+      const b = document.getElementById('notifBadge');
+      if(cnt > 0) { b.innerText = cnt; b.style.display = 'flex'; document.getElementById('adminBell').classList.add('shake'); }
+      else { b.style.display = 'none'; document.getElementById('adminBell').classList.remove('shake'); }
+    }
+
+    window.showNotifs = async function() {
+      if(notifs.length === 0) return alert("لا تنبيهات");
+      let msg = "📢 التنبيهات:\n";
+      notifs.forEach(n => msg += `- ${n.description}\n`);
+      
+      if(confirm(msg + "\n\n هل تريد مسح جميع التنبيهات (تم العلم)؟")) {
+        await _supa.from('expense_transactions').delete().eq('category', 'alert');
+        alert("تم مسح التنبيهات"); refreshData();
+      }
+    }
+
+    function fillResetChecks() {
+      let h = '';
+      for(let i=1; i<=27; i++) {
+        h += `<div class="check-item"><input type="checkbox" value="${i}" class="reset-check"><label>ع ${i}</label></div>`;
+      }
+      document.getElementById('resetCheckGrid').innerHTML = h;
+    }
+
+    async function resetSystem() {
+      if(!confirm("⚠️ تحذير: مسح كافة البيانات؟")) return;
+      if(prompt("اكتب 'تأكيد' للمسح:") !== "تأكيد") return;
+      await _supa.from('income_transactions').delete().neq('id', 0);
+      await _supa.from('expense_transactions').delete().neq('id', 0);
+      alert("تم تصفير النظام!"); refreshData();
+    }
+
+    async function resetSelected() {
+      const checks = document.querySelectorAll('.reset-check:checked');
+      if(checks.length === 0) return alert("اختر عمارات");
+      if(!confirm(`تصفير ${checks.length} عمارات؟`)) return;
+      const ids = Array.from(checks).map(c => parseInt(c.value));
+      await _supa.from('income_transactions').delete().in('building_id', ids);
+      alert("تم!"); refreshData();
+    }
+
+    async function resetMyBuilding() {
+      if(!confirm("تصفير ديون عمارتك؟")) return;
+      await _supa.from('income_transactions').delete().eq('building_id', currentUser.bId);
+      alert("تم!"); refreshData();
+    }
+
+    function updateRepStats(bData) {
+      let unitsArr = [];
+      for(let u=1; u<=24; u++) unitsArr.push({ u: u, paid: bData.units[u] || 0 });
+      
+      unitsArr.sort((a,b) => b.paid - a.paid);
+      let topH = '';
+      unitsArr.slice(0, 5).forEach(x => topH += `<tr><td>شقة ${x.u}</td><td class="text-success fw-bold">${x.paid}</td></tr>`);
+      document.getElementById('topUnits').innerHTML = topH;
+
+      unitsArr.sort((a,b) => a.paid - b.paid);
+      let lazyH = '';
+      unitsArr.slice(0, 5).forEach(x => lazyH += `<tr><td>شقة ${x.u}</td><td class="text-danger fw-bold">${x.paid}</td></tr>`);
+      document.getElementById('lazyUnits').innerHTML = lazyH;
+    }
+
+    function renderExp(list) {
+      list.sort((a,b) => {
+        if (a.type === 'income' && b.type === 'expense') return -1; 
+        if (a.type === 'expense' && b.type === 'income') return 1;
+        return new Date(b.date) - new Date(a.date); 
+      });
+
+      let h = '';
+      list.forEach(x => {
+        let cellStyle = ''; 
+        let amtClass = '';
+        let sign = '';
+
+        if(x.type === 'income') {
+             cellStyle = 'background-color: #d1e7dd !important; color: #0f5132 !important; font-weight:bold;';
+             amtClass = 'text-success';
+             sign = '+';
+        } else {
+             cellStyle = '';
+             amtClass = 'text-danger fw-bold';
+             sign = '-';
+        }
+
+        h += `<tr>
+                <td style="${cellStyle}">${new Date(x.date).toLocaleDateString('ar-EG')}</td>
+                <td style="${cellStyle}">${x.desc}</td>
+                <td class="${amtClass}" style="${cellStyle}" dir="ltr">${sign}${x.amount}</td>
+              </tr>`;
+      });
+      document.getElementById('expTable').innerHTML = h;
+    }
+	
+    function fillExpSelect() {
+      let h = '<option value="general">🌍 عام</option>';
+      for(let i=1; i<=27; i++) h += `<option value="${i}">عمارة ${i}</option>`;
+      document.getElementById('exType').innerHTML = h;
+    }
+
+    async function saveExp() {
+      const desc = document.getElementById('exDesc').value;
+      const amt = document.getElementById('exAmt').value;
+      const type = document.getElementById('exType').value;
+      
+      const fullDesc = `${desc} (${currentUser.name})`;
+      let pl = { description: fullDesc, amount: amt, category: 'تشغيل' };
+      if(type === 'general') pl.is_general = true;
+      else { pl.is_general = false; pl.building_id = type; }
+      
+      await _supa.from('expense_transactions').insert(pl);
+      alert("تم!"); refreshData();
+    }
+
+    function renderLeaderboard(bData) {
+      const arr = Object.values(bData).sort((a,b) => b.paid - a.paid);
+      let h = '';
+      arr.forEach((b, idx) => {
+        const icon = idx < 3 ? '👑' : `#${idx+1}`;
+        const color = idx < 3 ? 'text-warning' : 'text-muted';
+        h += `<tr><td class="${color}">${icon}</td><td>عمارة ${b.id}</td><td class="text-end fw-bold text-white">${b.paid.toLocaleString()}</td></tr>`;
+      });
+      document.getElementById('leaderboard').innerHTML = h;
+    }
+
+    function goTab(tId, btn) {
+      document.getElementById('tab-home').style.display = 'none';
+      document.getElementById('tab-buildings').style.display = 'none';
+      document.getElementById('tab-expenses').style.display = 'none';
+      document.getElementById('tab-settings').style.display = 'none';
+      document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+      
+      btn.classList.add('active');
+      document.getElementById('tab-' + tId).style.display = 'block';
+    }
+
+    window.exportXLS = async function() {
+      const { data } = await _supa.from('expense_transactions').select('*');
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Expenses");
+      XLSX.writeFile(wb, "SacanMiser8.xlsx");
+    }
+
+   async function saveDonation() {
+        const desc = document.getElementById('donDesc').value;
+        const amt = document.getElementById('donAmt').value;
+        if(!desc || !amt) return alert("أكمل البيانات");
+        
+        const fullDesc = `تبرع/إيراد: ${desc} (${currentUser.name})`;
+        await _supa.from('income_transactions').insert({building_id: null, amount: amt, notes: fullDesc});
+        
+        alert("تم إضافة الإيراد للخزنة! 💰");
+        document.getElementById('donDesc').value = "";
+        document.getElementById('donAmt').value = "";
+        refreshData();
+    }
+
+    function updateTarget() {
+        const newVal = document.getElementById('targetInput').value;
+        if(!newVal) return;
+        if(!confirm(`تغيير المستهدف للعمارة لـ ${newVal} جنيه؟`)) return;
+        
+        localStorage.setItem('sakanTarget', newVal);
+        TARGET_BUILDING = parseInt(newVal);
+        alert("تم تحديث النظام! ✅");
+        refreshData();
+    }
+  </script>
+</body>
+</html>
