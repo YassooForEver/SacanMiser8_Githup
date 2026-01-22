@@ -33,23 +33,27 @@
           width: 120px;
           height: auto;
           margin-bottom: 20px;
-          border-radius: 15px;
-          box-shadow: 0 0 20px rgba(10, 132, 255, 0.3);
+          border-radius: 20px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         "
       />
       <div class="text-center mb-4" style="line-height: 1.2">
         <div
           class="text-white fw-bold"
-          style="font-size: 28px; letter-spacing: 1px"
+          style="
+            font-size: 28px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          "
         >
           كمبوند سكن مصر
         </div>
         <div
           style="
-            color: #62a83d;
+            color: #ffffff;
             font-size: 42px;
             font-weight: 800;
-            text-shadow: 0 0 20px rgba(98, 168, 61, 0.6);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
           "
         >
           مسلسل 8
@@ -58,7 +62,11 @@
       <div
         id="loginClock"
         class="text-white fw-bold mb-5"
-        style="font-size: 40px; font-family: monospace"
+        style="
+          font-size: 40px;
+          font-family: monospace;
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        "
       >
         00:00
       </div>
@@ -76,7 +84,11 @@
         placeholder="كلمة المرور"
       />
       <button onclick="login()" class="login-btn">دخول النظام</button>
-      <div id="loginErr" class="text-danger mt-3 fw-bold small"></div>
+      <div
+        id="loginErr"
+        class="text-danger mt-3 fw-bold small"
+        style="display: none"
+      ></div>
     </div>
 
     <div class="header">
@@ -155,7 +167,7 @@
               class="col-4 border-end"
               style="border-color: var(--border-glass)"
             >
-              <small class="text-sub" style="font-size: 10px">تبرعات</small>
+              <small class="text-sub" style="font-size: 10px">مساهمات</small>
               <div
                 id="dDonations"
                 class="fw-bold text-warning"
@@ -276,7 +288,9 @@
           class="ios-card"
           style="display: none; border-left: 4px solid var(--success)"
         >
-          <h6 class="text-success fw-bold mb-3">💰 تسجيل إيراد خارجي / تبرع</h6>
+          <h6 class="text-success fw-bold mb-3">
+            💰 تسجيل إيراد خارجي / إهداء & مساهمة
+          </h6>
           <div class="row g-2">
             <div class="col-8">
               <input
