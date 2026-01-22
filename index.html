@@ -10,6 +10,9 @@
 
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
@@ -40,7 +43,7 @@
         await OneSignal.init({
           appId: '975c52f9-2c01-4bc0-8cbb-60f1ff173598',
           notifyButton: {
-            enable: true /* إظهار زر الجرس الأحمر */,
+            enable: true /* زر الجرس الأحمر */,
           },
           allowLocalhostAsSecureOrigin: true,
         });
