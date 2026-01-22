@@ -17,347 +17,13 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
+    <link rel="stylesheet" href="styles.css" />
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-    <style>
-      :root {
-        --bg-body: #000000;
-        --card-bg: #1c1c1e;
-        --glass-bg: rgba(44, 44, 46, 0.95);
-        --border-glass: 1px solid rgba(255, 255, 255, 0.15);
-        --text-main: #ffffff;
-        --text-sub: #8e8e93;
-        --accent: #0a84ff;
-        --success: #30d158;
-        --danger: #ff453a;
-        --warning: #ffd60a;
-        --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-      }
-
-      [data-theme='light'] {
-        --bg-body: #f2f2f7;
-        --card-bg: #ffffff;
-        --glass-bg: rgba(255, 255, 255, 0.95);
-        --border-glass: 1px solid rgba(0, 0, 0, 0.1);
-        --text-main: #000000;
-        --text-sub: #666;
-        --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      }
-
-      body {
-        background-color: var(--bg-body);
-        color: var(--text-main);
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-          sans-serif;
-        padding-bottom: 120px;
-        min-height: 100vh;
-        transition: background 0.3s;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .ios-card {
-        background: var(--card-bg);
-        border: var(--border-glass);
-        border-radius: 20px;
-        padding: 18px;
-        margin-bottom: 15px;
-        box-shadow: var(--shadow);
-      }
-
-      .header {
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        padding: 15px 20px;
-        border-bottom: var(--border-glass);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-      }
-      .b-item {
-        background: rgba(125, 125, 125, 0.1);
-        border: var(--border-glass);
-        border-radius: 16px;
-        padding: 12px 5px;
-        text-align: center;
-        transition: 0.2s;
-        cursor: pointer;
-      }
-      .b-item:active {
-        transform: scale(0.96);
-      }
-      .b-item.my-b {
-        border: 2px solid var(--accent);
-        box-shadow: 0 0 15px rgba(10, 132, 255, 0.3);
-      }
-      .status-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-bottom: 5px;
-      }
-      .dot-green {
-        background: var(--success);
-        box-shadow: 0 0 8px var(--success);
-      }
-      .dot-red {
-        background: var(--danger);
-      }
-
-      .grid-4 {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-      }
-      .unit-box {
-        aspect-ratio: 1;
-        border-radius: 12px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        color: white;
-        cursor: pointer;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-      .u-txt {
-        font-size: 9px;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 2px 6px;
-        border-radius: 6px;
-        margin-top: 3px;
-      }
-
-      .bg-green {
-        background: linear-gradient(135deg, #30d158, #20aa45);
-      }
-      .bg-red {
-        background: linear-gradient(135deg, #ff453a, #d6352c);
-      }
-      .bg-yellow {
-        background: linear-gradient(135deg, #ffd60a, #f0b90b);
-        color: black;
-        text-shadow: none;
-      }
-
-      .tab-bar {
-        position: fixed;
-        bottom: 20px;
-        left: 5%;
-        width: 90%;
-        background: var(--glass-bg);
-        backdrop-filter: blur(30px);
-        border-radius: 40px;
-        border: var(--border-glass);
-        display: flex;
-        justify-content: space-around;
-        padding: 12px 0;
-        z-index: 2000;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      }
-      .tab-item {
-        background: none;
-        border: none;
-        color: var(--text-sub);
-        font-size: 10px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .tab-item.active {
-        color: var(--accent);
-        transform: translateY(-3px);
-        transition: 0.3s;
-      }
-      .tab-item i {
-        font-size: 22px;
-        margin-bottom: 4px;
-      }
-
-      .checkbox-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        max-height: 250px;
-        overflow-y: auto;
-        margin-bottom: 15px;
-      }
-      .check-item {
-        background: rgba(125, 125, 125, 0.1);
-        padding: 10px;
-        border-radius: 10px;
-        text-align: center;
-      }
-      .check-item input {
-        transform: scale(1.3);
-        margin-bottom: 5px;
-        accent-color: var(--danger);
-      }
-
-      #loginScreen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
-        background-size: 30px 30px;
-      }
-      .login-inp {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid #333;
-        color: white;
-        padding: 16px;
-        border-radius: 14px;
-        width: 85%;
-        text-align: center;
-        margin-bottom: 12px;
-        font-size: 16px;
-        outline: none;
-      }
-      .login-btn {
-        background: var(--accent);
-        color: white;
-        border: none;
-        padding: 16px;
-        width: 85%;
-        border-radius: 14px;
-        font-weight: bold;
-        font-size: 18px;
-      }
-
-      .bell-wrap {
-        position: relative;
-        cursor: pointer;
-        padding: 5px;
-      }
-      .bell-badge {
-        position: absolute;
-        top: -2px;
-        right: -2px;
-        background: var(--danger);
-        color: white;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        font-size: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #000;
-      }
-      .shake {
-        animation: shake 1.5s infinite;
-      }
-      @keyframes shake {
-        0%,
-        100% {
-          transform: rotate(0);
-        }
-        10%,
-        30%,
-        50%,
-        70%,
-        90% {
-          transform: rotate(-15deg);
-        }
-        20%,
-        40%,
-        60%,
-        80% {
-          transform: rotate(15deg);
-        }
-      }
-
-      .modal-content {
-        background: var(--card-bg);
-        border: var(--border-glass);
-        color: var(--text-main);
-        border-radius: 20px;
-      }
-      .modal-body {
-        padding-bottom: 100px;
-      }
-
-      .chart-legend {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 15px;
-        font-size: 12px;
-        font-weight: bold;
-      }
-      .legend-item span {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-left: 5px;
-      }
-
-      /* Fix Dark Mode */
-      body,
-      .h1,
-      .h2,
-      .h3,
-      .h4,
-      .h5,
-      .h6,
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      h6,
-      span,
-      div,
-      label {
-        color: var(--text-main) !important;
-      }
-      .form-control,
-      .form-select {
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: #ffffff !important;
-      }
-      [data-theme='light'] .form-control,
-      [data-theme='light'] .form-select {
-        background-color: #ffffff !important;
-        border: 1px solid #ced4da !important;
-        color: #000000 !important;
-      }
-      .table {
-        color: var(--text-main) !important;
-        --bs-table-color: var(--text-main) !important;
-        --bs-table-bg: transparent !important;
-      }
-      .btn-close {
-        filter: invert(1) grayscale(100%) brightness(200%);
-      }
-      [data-theme='light'] .btn-close {
-        filter: none;
-      }
-    </style>
   </head>
+
   <body data-theme="light">
     <div id="loginScreen">
       <img
@@ -485,7 +151,6 @@
                 0
               </div>
             </div>
-
             <div
               class="col-4 border-end"
               style="border-color: var(--border-glass)"
@@ -499,7 +164,6 @@
                 0
               </div>
             </div>
-
             <div class="col-4">
               <small class="text-sub" style="font-size: 10px">مديونية</small>
               <div
@@ -533,6 +197,7 @@
             </div>
           </div>
         </div>
+
         <div
           id="pollResultsCard"
           class="ios-card"
@@ -551,11 +216,8 @@
             </h6>
             <span class="badge bg-danger blink_me">مباشر 🔴</span>
           </div>
-
           <p id="pollQuestionTitle" class="mb-3 small fw-bold">...</p>
-
           <div id="pollBarsSpace"></div>
-
           <div id="pollActionArea" class="text-center mt-2">
             <button
               onclick="goTab('settings', document.querySelectorAll('.tab-item')[3]); loadPolls()"
@@ -691,7 +353,6 @@
             </thead>
             <tbody id="expTable"></tbody>
           </table>
-
           <div
             class="text-center p-2 border-top"
             style="border-color: var(--border-glass)"
@@ -709,6 +370,66 @@
       </div>
 
       <div id="tab-settings" style="display: none">
+        <div class="ios-card border border-secondary mb-3">
+          <h6 class="fw-bold mb-3"><i class="fas fa-key me-2"></i>الأمان</h6>
+          <button
+            onclick="promptChangePassword()"
+            class="btn btn-outline-secondary w-100"
+          >
+            تغيير كلمة مروري 🔐
+          </button>
+        </div>
+
+        <div
+          id="userManagementCard"
+          class="ios-card border border-primary mb-3"
+          style="display: none"
+        >
+          <h6 class="text-primary fw-bold mb-3">
+            <i class="fas fa-users-cog me-2"></i>إضافة مستخدم جديد
+          </h6>
+          <div class="input-group mb-2">
+            <input
+              type="text"
+              id="newUsername"
+              class="form-control"
+              placeholder="اسم الدخول (User)"
+            />
+            <input
+              type="text"
+              id="newPassword"
+              class="form-control"
+              placeholder="كلمة السر"
+            />
+          </div>
+          <input
+            type="text"
+            id="newName"
+            class="form-control mb-2"
+            placeholder="الاسم الظاهر"
+          />
+          <div class="d-flex gap-2 mb-2">
+            <select
+              id="newRole"
+              class="form-select"
+              onchange="toggleBIdField()"
+            >
+              <option value="rep">مندوب عمارة</option>
+              <option value="admin">مدير (Admin)</option>
+            </select>
+            <input
+              type="number"
+              id="newBId"
+              class="form-control"
+              placeholder="رقم العمارة"
+              style="display: block"
+            />
+          </div>
+          <button onclick="addNewUser()" class="btn btn-primary w-100 fw-bold">
+            تسجيل المستخدم
+          </button>
+        </div>
+
         <div
           id="votingSection"
           class="ios-card border-start border-4 border-primary"
@@ -723,41 +444,18 @@
             </div>
           </div>
         </div>
+
         <div id="adminControlPanel" style="display: none">
-          <div class="d-flex gap-2">
-            <button
-              onclick="createNewPoll()"
-              class="btn btn-primary w-50 fw-bold"
-            >
-              نشر التصويت
-            </button>
-            <button
-              onclick="closeCurrentPoll()"
-              class="btn btn-outline-secondary w-25"
-              title="إغلاق التصويت (إخفاء)"
-            >
-              <i class="fas fa-stop"></i>
-            </button>
-            <button
-              onclick="deleteCurrentPoll()"
-              class="btn btn-outline-danger w-25"
-              title="حذف السؤال نهائياً"
-            >
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
           <div class="ios-card border border-primary mb-3">
             <h6 class="text-primary fw-bold mb-3">
               <i class="fas fa-bullhorn me-2"></i>إطلاق تصويت جديد
             </h6>
-
             <input
               type="text"
               id="newPollQ"
               class="form-control mb-2"
               placeholder="اكتب السؤال هنا..."
             />
-
             <select
               id="pollDuration"
               class="form-select mb-2 text-center"
@@ -768,27 +466,23 @@
               <option value="72">مدة 72 ساعة (3 أيام)</option>
               <option value="168">مدة أسبوع كامل</option>
             </select>
-
-            <button
-              onclick="createNewPoll()"
-              class="btn btn-primary w-100 fw-bold"
-            >
-              نشر التصويت
-            </button>
-          </div>
-
-          <div
-            id="votingSection"
-            class="ios-card border-start border-4 border-primary"
-            style="display: none; margin-top: 15px"
-          >
-            <h6 class="fw-bold mb-3 text-primary">
-              <i class="fas fa-vote-yea me-2"></i>شارك في القرار
-            </h6>
-            <div id="activePolls">
-              <div class="text-center text-muted small">جاري التحميل...</div>
+            <div class="d-flex gap-2">
+              <button
+                onclick="createNewPoll()"
+                class="btn btn-primary w-50 fw-bold"
+              >
+                نشر التصويت
+              </button>
+              <button
+                onclick="deleteCurrentPoll()"
+                class="btn btn-outline-danger w-50"
+                title="حذف السؤال"
+              >
+                <i class="fas fa-trash"></i> حذف النشط
+              </button>
             </div>
           </div>
+
           <div class="ios-card border border-warning mb-3">
             <h6 class="text-warning fw-bold mb-3">
               <i class="fas fa-edit me-2"></i>قيمة التحصيل (شهر/عمارة)
@@ -804,13 +498,11 @@
                 حفظ
               </button>
             </div>
-            <small class="text-muted mt-2 d-block"
-              >* سيتم تغيير الحسابات لكل العمارات</small
-            >
           </div>
+
           <div class="ios-card border border-info mb-3">
             <h6 class="text-info fw-bold mb-3">
-              <i class="fas fa-shield-alt me-2"></i>النسخ الاحتياطي والاستعادة
+              <i class="fas fa-shield-alt me-2"></i>النسخ والاستعادة
             </h6>
             <div class="d-flex gap-2">
               <button
@@ -823,7 +515,7 @@
                 onclick="document.getElementById('restoreFile').click()"
                 class="btn btn-outline-warning w-50 fw-bold"
               >
-                <i class="fas fa-upload me-2"></i>استعادة Restore
+                <i class="fas fa-upload me-2"></i>استعادة
               </button>
               <input
                 type="file"
@@ -920,16 +612,21 @@
           </div>
           <div class="modal-body">
             <div class="grid-4" id="mGrid"></div>
-
             <div
               class="mt-5 pt-3 border-top"
               style="border-color: var(--border-glass); display: none"
               id="repAction"
             >
               <button
+                onclick="markAllPaid()"
+                class="btn btn-success w-100 fw-bold py-2 mb-3 shadow"
+              >
+                <i class="fas fa-check-double me-2"></i> تحصيل العمارة بالكامل
+              </button>
+              <button
                 id="notifyBtn"
                 onclick="sendNotify()"
-                class="btn btn-warning w-100 fw-bold py-3 rounded-4 shadow"
+                class="btn btn-warning w-100 fw-bold py-2 rounded-4 shadow"
               >
                 <i class="fas fa-bell me-2"></i> إبلاغ الإدارة بالتمام
               </button>
@@ -962,1037 +659,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      const DB_URL = 'https://awtnljsrywkxhvxtjwlo.supabase.co';
-      const DB_KEY =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF3dG5sanNyeXdreGh2eHRqd2xvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg5MzEwMjMsImV4cCI6MjA4NDUwNzAyM30.UacBpwAmEjmbGlM3eQwNolr7uRnTFU3Idq8dNPCOwYU';
-      let TARGET_BUILDING = localStorage.getItem('sakanTarget')
-        ? parseInt(localStorage.getItem('sakanTarget'))
-        : 500;
-      // متغيرات Pagination
-      let currentPage = 0;
-      const PAGE_SIZE = 15; // عدد الأسطر في كل دفعة
-      let isLastPage = false;
-
-      const USERS = {
-        admin1: { p: 'Adm!n@88', role: 'admin', name: 'المدير العام 🛡️' },
-        admin: { p: '123', role: 'admin', name: 'تجربة مدير' },
-      };
-      for (let i = 1; i <= 27; i++)
-        USERS[`b${i}`] = {
-          p: `x7#mP${i}`,
-          role: 'rep',
-          bId: i,
-          name: `ممثل عمارة ${i} 👤`,
-        };
-      USERS['b1'].p = 'x7#mP1';
-
-      let _supa = null;
-      let currentUser = null;
-      let localData = {};
-      let chartInstance = null;
-      let notifs = [];
-
-      function updateClock() {
-        const n = new Date();
-        const t = n.toLocaleTimeString('en-US', {
-          hour12: true,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        });
-        const d = n.toLocaleDateString('ar-EG');
-        document.getElementById('loginClock').innerText = t;
-        document.getElementById('headTime').innerText = t;
-        document.getElementById('headDate').innerText = d;
-      }
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      function toggleTheme() {
-        const b = document.body;
-        b.dataset.theme = b.dataset.theme === 'light' ? 'dark' : 'light';
-      }
-
-      function login() {
-        const u = document
-          .getElementById('userInput')
-          .value.trim()
-          .toLowerCase();
-        const p = document.getElementById('passInput').value.trim();
-        const user = USERS[u];
-
-        if (user && user.p === p) {
-          if (navigator.vibrate) navigator.vibrate(50);
-          currentUser = user;
-
-          document.getElementById('loginScreen').style.display = 'none';
-          document.getElementById('app').style.display = 'block';
-          document.getElementById('navBar').style.display = 'flex';
-          document.getElementById('roleDisplay').innerText = user.name;
-          document.getElementById('targetInput').value = TARGET_BUILDING;
-
-          if (!_supa) _supa = window.supabase.createClient(DB_URL, DB_KEY);
-
-          if (user.role === 'admin') {
-            document.getElementById('addCard').style.display = 'block';
-            document.getElementById('excelBtn').style.display = 'block';
-            document.getElementById('adminBell').style.display = 'flex';
-            document.getElementById('adminControlPanel').style.display =
-              'block';
-            document.getElementById('donationCard').style.display = 'block';
-            fillExpSelect();
-            fillResetChecks();
-          } else {
-            document.getElementById('addCard').style.display = 'none';
-            document.getElementById('excelBtn').style.display = 'none';
-            document.getElementById('adminBell').style.display = 'none';
-            document.getElementById('repControlPanel').style.display = 'block';
-            document.getElementById('donationCard').style.display = 'none';
-          }
-          loadPolls();
-          refreshData();
-        } else {
-          if (navigator.vibrate) navigator.vibrate([50, 50]);
-          document.getElementById('loginErr').innerText = 'بيانات خاطئة';
-        }
-      }
-      function logout() {
-        location.reload();
-      }
-
-      // ---------------------------------------------------------
-      // 1. استدعاء المحاسب الذكي من السيرفر (RPC Call) - هذا هو التحديث الجديد 🚀
-      // ---------------------------------------------------------
-
-      async function loadTransactionsChunk(isReset = false) {
-        const btn = document.getElementById('loadMoreBtn');
-
-        if (isReset) {
-          currentPage = 0;
-          isLastPage = false;
-          document.getElementById('expTable').innerHTML = '';
-          if (btn) btn.style.display = 'block';
-          if (btn) btn.innerText = 'عرض المزيد ⬇️';
-        }
-
-        if (isLastPage) return;
-
-        if (btn) btn.innerText = 'جاري التحميل... ⏳';
-
-        const from = currentPage * PAGE_SIZE;
-        const to = from + PAGE_SIZE - 1;
-
-        // ============================================================
-        // التعديل هنا 👇: الترتيب حسب النوع أولاً ثم التاريخ
-        // ============================================================
-        const { data, error } = await _supa
-          .from('all_transactions_view')
-          .select('*')
-          // 1. رتب حسب النوع تنازلياً (عشان Income ييجي قبل Expense)
-          .order('type', { ascending: false })
-          // 2. جوه كل نوع، رتبهم بالأحدث تاريخاً
-          .order('created_at', { ascending: false })
-          .range(from, to);
-
-        if (error) {
-          console.error(error);
-          if (btn) btn.innerText = 'خطأ في التحميل ❌';
-          return;
-        }
-
-        if (data.length < PAGE_SIZE) {
-          isLastPage = true;
-          if (btn) btn.style.display = 'none';
-        } else {
-          if (btn) btn.innerText = 'عرض المزيد ⬇️';
-        }
-
-        renderExpAppend(data);
-        currentPage++;
-      }
-
-      function renderExpAppend(list) {
-        let h = '';
-        list.forEach((x) => {
-          let cellStyle = '';
-          let amtClass = '';
-          let sign = '';
-
-          // 1. تنسيق المساهمات/الإيرادات (أخضر 🟢)
-          if (x.type === 'income') {
-            cellStyle =
-              'background-color: rgba(25, 135, 84, 0.1) !important; color: #198754 !important; font-weight:bold;';
-            amtClass = 'text-success';
-            sign = '+';
-          }
-          // 2. تنسيق المصروفات (أحمر 🔴)
-          else {
-            cellStyle =
-              'background-color: rgba(220, 53, 69, 0.1) !important; color: #dc3545 !important; font-weight:bold;';
-            amtClass = 'text-danger';
-            sign = '-';
-          }
-
-          // إعداد التاريخ والوقت (مثال: 22/1/2026 2:30 م)
-          const dateTime = new Date(x.created_at).toLocaleString('ar-EG', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true, // لنظام 12 ساعة (ص/م)
-          });
-
-          h += `<tr>
-                <td style="${cellStyle}; font-size:11px">${dateTime}</td>
-                <td style="${cellStyle}">${x.desc_text}</td>
-                <td class="${amtClass}" style="${cellStyle}" dir="ltr">${sign}${x.amount.toLocaleString()}</td>
-              </tr>`;
-        });
-
-        document.getElementById('expTable').insertAdjacentHTML('beforeend', h);
-      }
-
-      // دالة مؤقتة لجلب بيانات الجداول (سنطورها لاحقاً لتكون ذكية ولا تجلب كل شيء)
-
-      // ==========================================
-      // دالة التحديث الرئيسية (النسخة النهائية السريعة 🚀)
-      // ==========================================
-      async function refreshData() {
-        // 1. استدعاء "المحاسب الذكي" من السيرفر لجلب الإجماليات (RPC)
-        loadPollResults();
-        const { data: summary, error } = await _supa.rpc(
-          'get_financial_summary'
-        );
-
-        if (error) console.error('RPC Error:', error);
-
-        if (summary) {
-          // قراءة الأرقام
-          const safe = summary.safe_balance;
-          const tInc = summary.total_income;
-          const tExp = summary.total_expense;
-          const bInc = summary.building_income;
-
-          // الحسابات
-          const totalRequired = 27 * TARGET_BUILDING;
-          const debt = totalRequired - bInc;
-          const totalDonations = tInc - bInc;
-
-          // تحديث الشاشة
-          document.getElementById('dSafe').innerText = safe.toLocaleString();
-          document.getElementById('dDebt').innerText = debt.toLocaleString();
-          document.getElementById('dDonations').innerText =
-            totalDonations.toLocaleString();
-          document.getElementById('dExpTotal').innerText =
-            tExp.toLocaleString();
-
-          document.getElementById('legInc').innerText = tInc.toLocaleString();
-          document.getElementById('legExp').innerText = tExp.toLocaleString();
-          document.getElementById('legDebt').innerText = debt.toLocaleString();
-          renderChart(tInc, tExp, debt);
-        }
-
-        // 2. تحميل جدول العمليات (أول 15 عملية فقط) بنظام الصفحات
-        loadTransactionsChunk(true);
-
-        // 3. تحميل حالة العمارات (المربعات الملونة)
-        refreshBuildingsStatus();
-
-        // تحديث جرس التنبيهات للأدمن
-        if (currentUser && currentUser.role === 'admin') updateBell();
-      }
-
-      // ==========================================
-      // دالة خاصة لجلب حالة العمارات فقط (للمربعات)
-      // ==========================================
-      async function refreshBuildingsStatus() {
-        // نجلب فقط الإيرادات المرتبطة بعمارة
-        const { data: inc } = await _supa
-          .from('income_transactions')
-          .select('building_id, amount, notes')
-          .not('building_id', 'is', null);
-
-        let buildings = {};
-        // تصفير العدادات محلياً
-        for (let i = 1; i <= 27; i++)
-          buildings[i] = { id: i, paid: 0, units: {} };
-
-        // توزيع المبالغ
-        if (inc)
-          inc.forEach((t) => {
-            buildings[t.building_id].paid += t.amount;
-
-            if (t.notes && t.notes.includes('unit_')) {
-              const u = parseInt(t.notes.split('unit_')[1]);
-              buildings[t.building_id].units[u] =
-                (buildings[t.building_id].units[u] || 0) + t.amount;
-            }
-          });
-
-        localData = buildings; // تحديث الذاكرة المحلية
-        renderLeaderboard(buildings);
-        renderBuildings(buildings); // رسم المربعات
-
-        // تحديث إحصائيات المندوب
-        if (currentUser && currentUser.role === 'rep') {
-          updateRepStats(buildings[currentUser.bId]);
-        }
-      }
-
-      function renderChart(inc, exp, debt) {
-        const ctx = document.getElementById('chart').getContext('2d');
-        if (chartInstance) chartInstance.destroy();
-        chartInstance = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['محصل', 'مصروف', 'مديونية'],
-            datasets: [
-              {
-                data: [inc, exp, debt],
-                backgroundColor: ['#30D158', '#FF453A', '#0A84FF'],
-                borderWidth: 0,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-          },
-        });
-      }
-
-      function renderBuildings(bData) {
-        let h = '';
-        for (let i = 1; i <= 27; i++) {
-          const b = bData[i];
-          const pct = (b.paid / TARGET_BUILDING) * 100;
-          let color = 'text-muted',
-            msg = 'بداية موفقة 🌱';
-
-          if (pct >= 100) {
-            color = 'text-success fw-bold';
-            msg = 'ممتاز! 🏆';
-          } else if (pct > 50) {
-            color = 'text-warning fw-bold';
-            msg = 'شد حيلك 💪';
-          }
-
-          const myClass =
-            currentUser.role === 'rep' && currentUser.bId === i ? 'my-b' : '';
-          const dot = pct >= 100 ? 'dot-green' : 'dot-red';
-
-          h += `
-          <div class="b-item ${myClass}" onclick="openB(${i})">
-            <div class="mb-1"><span class="status-dot ${dot}"></span></div>
-            <div class="fw-bold">ع ${i}</div>
-            <div class="small fw-bold mt-1">${(b.paid / 1000).toFixed(1)}k</div>
-            <div style="font-size:9px" class="${color} mt-1">${msg}</div>
-          </div>`;
-        }
-        document.getElementById('bGrid').innerHTML = h;
-      }
-
-      function openB(id) {
-        if (currentUser.role !== 'admin' && currentUser.bId !== id) {
-          if (navigator.vibrate) navigator.vibrate(100);
-          return alert('⛔ غير مسموح لك بدخول هذه العمارة');
-        }
-
-        const b = localData[id];
-        document.getElementById('mTitle').innerText = 'عمارة ' + id;
-
-        const TARGET_UNIT = TARGET_BUILDING / 24;
-
-        let grid = '';
-        for (let u = 1; u <= 24; u++) {
-          const paid = b.units[u] || 0;
-          const remaining = Math.max(0, TARGET_UNIT - paid);
-          let cls = 'bg-red',
-            txt = `عليه ${Math.ceil(remaining)}`;
-
-          if (paid >= TARGET_UNIT - 0.5) {
-            cls = 'bg-green';
-            txt = 'خالص ✅';
-          } else if (paid > 0) {
-            cls = 'bg-yellow';
-            txt = `باقي ${Math.ceil(remaining)}`;
-          }
-
-          grid += `
-          <div class="unit-box ${cls}" onclick="pay(${id}, ${u})">
-            <span>${u}</span><span class="u-txt">${txt}</span>
-          </div>`;
-        }
-        document.getElementById('mGrid').innerHTML = grid;
-
-        if (currentUser.role === 'rep')
-          document.getElementById('repAction').style.display = 'block';
-        else document.getElementById('repAction').style.display = 'none';
-
-        document.getElementById('notifyMsg').style.display = 'none';
-        new bootstrap.Modal(document.getElementById('bModal')).show();
-      }
-
-      async function pay(bId, uId) {
-        const amt = prompt(`دفع للشقة ${uId} (عمارة ${bId}):`);
-        if (!amt) return;
-
-        const note = `unit_${uId} - (${currentUser.name})`;
-        await _supa
-          .from('income_transactions')
-          .insert({ building_id: bId, amount: amt, notes: note });
-        alert('تم الحفظ!');
-        refreshData();
-        bootstrap.Modal.getInstance(document.getElementById('bModal')).hide();
-      }
-
-      async function backupSystem() {
-        if (!confirm('تحميل نسخة احتياطية؟')) return;
-        const { data: inc } = await _supa
-          .from('income_transactions')
-          .select('*');
-        const { data: exp } = await _supa
-          .from('expense_transactions')
-          .select('*');
-
-        const backupData = {
-          income: inc,
-          expense: exp,
-          date: new Date().toISOString(),
-        };
-        const blob = new Blob([JSON.stringify(backupData)], {
-          type: 'application/json',
-        });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `SacanMiser_Backup_${new Date()
-          .toISOString()
-          .slice(0, 10)}.json`;
-        a.click();
-      }
-
-      async function restoreSystem(input) {
-        if (!input.files[0]) return;
-        if (!confirm('⚠️ تحذير: سيتم مسح البيانات الحالية واستبدالها بالنسخة!'))
-          return;
-
-        const reader = new FileReader();
-        reader.onload = async function (e) {
-          try {
-            const data = JSON.parse(e.target.result);
-            await _supa.from('income_transactions').delete().neq('id', 0);
-            await _supa.from('expense_transactions').delete().neq('id', 0);
-
-            const cleanInc = data.income.map(({ id, ...rest }) => rest);
-            const cleanExp = data.expense.map(({ id, ...rest }) => rest);
-
-            if (cleanInc.length)
-              await _supa.from('income_transactions').insert(cleanInc);
-            if (cleanExp.length)
-              await _supa.from('expense_transactions').insert(cleanExp);
-
-            alert('تمت الاستعادة بنجاح! ✅');
-            location.reload();
-          } catch (err) {
-            alert('خطأ في الملف! ❌');
-            console.error(err);
-          }
-        };
-        reader.readAsText(input.files[0]);
-      }
-
-      async function sendNotify() {
-        const msg = `🔔 عمارة ${currentUser.bId} تبلغ بتمام التحصيل!`;
-        await _supa.from('expense_transactions').insert({
-          amount: 0,
-          description: msg,
-          category: 'alert',
-          is_general: true,
-        });
-        document.getElementById('notifyMsg').style.display = 'block';
-      }
-
-      function updateBell() {
-        const cnt = notifs.length;
-        const b = document.getElementById('notifBadge');
-        if (cnt > 0) {
-          b.innerText = cnt;
-          b.style.display = 'flex';
-          document.getElementById('adminBell').classList.add('shake');
-        } else {
-          b.style.display = 'none';
-          document.getElementById('adminBell').classList.remove('shake');
-        }
-      }
-
-      window.showNotifs = async function () {
-        if (notifs.length === 0) return alert('لا تنبيهات');
-        let msg = '📢 التنبيهات:\n';
-        notifs.forEach((n) => (msg += `- ${n.description}\n`));
-
-        if (confirm(msg + '\n\n هل تريد مسح جميع التنبيهات (تم العلم)؟')) {
-          await _supa
-            .from('expense_transactions')
-            .delete()
-            .eq('category', 'alert');
-          alert('تم مسح التنبيهات');
-          refreshData();
-        }
-      };
-
-      function fillResetChecks() {
-        let h = '';
-        for (let i = 1; i <= 27; i++) {
-          h += `<div class="check-item"><input type="checkbox" value="${i}" class="reset-check"><label>ع ${i}</label></div>`;
-        }
-        document.getElementById('resetCheckGrid').innerHTML = h;
-      }
-
-      async function resetSystem() {
-        if (!confirm('⚠️ تحذير: مسح كافة البيانات؟')) return;
-        if (prompt("اكتب 'تأكيد' للمسح:") !== 'تأكيد') return;
-        await _supa.from('income_transactions').delete().neq('id', 0);
-        await _supa.from('expense_transactions').delete().neq('id', 0);
-        alert('تم تصفير النظام!');
-        refreshData();
-      }
-
-      async function resetSelected() {
-        const checks = document.querySelectorAll('.reset-check:checked');
-        if (checks.length === 0) return alert('اختر عمارات');
-        if (!confirm(`تصفير ${checks.length} عمارات؟`)) return;
-        const ids = Array.from(checks).map((c) => parseInt(c.value));
-        await _supa.from('income_transactions').delete().in('building_id', ids);
-        alert('تم!');
-        refreshData();
-      }
-
-      async function resetMyBuilding() {
-        if (!confirm('تصفير ديون عمارتك؟')) return;
-        await _supa
-          .from('income_transactions')
-          .delete()
-          .eq('building_id', currentUser.bId);
-        alert('تم!');
-        refreshData();
-      }
-
-      function updateRepStats(bData) {
-        let unitsArr = [];
-        for (let u = 1; u <= 24; u++)
-          unitsArr.push({ u: u, paid: bData.units[u] || 0 });
-
-        unitsArr.sort((a, b) => b.paid - a.paid);
-        let topH = '';
-        unitsArr
-          .slice(0, 5)
-          .forEach(
-            (x) =>
-              (topH += `<tr><td>شقة ${x.u}</td><td class="text-success fw-bold">${x.paid}</td></tr>`)
-          );
-        document.getElementById('topUnits').innerHTML = topH;
-
-        unitsArr.sort((a, b) => a.paid - b.paid);
-        let lazyH = '';
-        unitsArr
-          .slice(0, 5)
-          .forEach(
-            (x) =>
-              (lazyH += `<tr><td>شقة ${x.u}</td><td class="text-danger fw-bold">${x.paid}</td></tr>`)
-          );
-        document.getElementById('lazyUnits').innerHTML = lazyH;
-      }
-
-      function renderExp(list) {
-        list.sort((a, b) => {
-          if (a.type === 'income' && b.type === 'expense') return -1;
-          if (a.type === 'expense' && b.type === 'income') return 1;
-          return new Date(b.date) - new Date(a.date);
-        });
-
-        let h = '';
-        list.forEach((x) => {
-          let cellStyle = '';
-          let amtClass = '';
-          let sign = '';
-
-          if (x.type === 'income') {
-            cellStyle =
-              'background-color: #d1e7dd !important; color: #0f5132 !important; font-weight:bold;';
-            amtClass = 'text-success';
-            sign = '+';
-          } else {
-            cellStyle = '';
-            amtClass = 'text-danger fw-bold';
-            sign = '-';
-          }
-
-          h += `<tr>
-                <td style="${cellStyle}">${new Date(x.date).toLocaleDateString(
-            'ar-EG'
-          )}</td>
-                <td style="${cellStyle}">${x.desc}</td>
-                <td class="${amtClass}" style="${cellStyle}" dir="ltr">${sign}${
-            x.amount
-          }</td>
-              </tr>`;
-        });
-        document.getElementById('expTable').innerHTML = h;
-      }
-
-      function fillExpSelect() {
-        let h = '<option value="general">🌍 عام</option>';
-        for (let i = 1; i <= 27; i++)
-          h += `<option value="${i}">عمارة ${i}</option>`;
-        document.getElementById('exType').innerHTML = h;
-      }
-
-      async function saveExp() {
-        const desc = document.getElementById('exDesc').value;
-        const amt = document.getElementById('exAmt').value;
-        const type = document.getElementById('exType').value;
-
-        const fullDesc = `${desc} (${currentUser.name})`;
-        let pl = { description: fullDesc, amount: amt, category: 'تشغيل' };
-        if (type === 'general') pl.is_general = true;
-        else {
-          pl.is_general = false;
-          pl.building_id = type;
-        }
-
-        await _supa.from('expense_transactions').insert(pl);
-        alert('تم!');
-        refreshData();
-      }
-
-      function renderLeaderboard(bData) {
-        const arr = Object.values(bData).sort((a, b) => b.paid - a.paid);
-        let h = '';
-        arr.forEach((b, idx) => {
-          const icon = idx < 3 ? '👑' : `#${idx + 1}`;
-          const color = idx < 3 ? 'text-warning' : 'text-muted';
-          h += `<tr><td class="${color}">${icon}</td><td>عمارة ${
-            b.id
-          }</td><td class="text-end fw-bold text-white">${b.paid.toLocaleString()}</td></tr>`;
-        });
-        document.getElementById('leaderboard').innerHTML = h;
-      }
-
-      function goTab(tId, btn) {
-        document.getElementById('tab-home').style.display = 'none';
-        document.getElementById('tab-buildings').style.display = 'none';
-        document.getElementById('tab-expenses').style.display = 'none';
-        document.getElementById('tab-settings').style.display = 'none';
-        document
-          .querySelectorAll('.tab-item')
-          .forEach((b) => b.classList.remove('active'));
-
-        btn.classList.add('active');
-        document.getElementById('tab-' + tId).style.display = 'block';
-      }
-
-      window.exportXLS = async function () {
-        const { data } = await _supa.from('expense_transactions').select('*');
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Expenses');
-        XLSX.writeFile(wb, 'SacanMiser8.xlsx');
-      };
-
-      async function saveDonation() {
-        const desc = document.getElementById('donDesc').value;
-        const amt = document.getElementById('donAmt').value;
-        if (!desc || !amt) return alert('أكمل البيانات');
-
-        const fullDesc = `تبرع/إيراد: ${desc} (${currentUser.name})`;
-        await _supa
-          .from('income_transactions')
-          .insert({ building_id: null, amount: amt, notes: fullDesc });
-
-        alert('تم إضافة الإيراد للخزنة! 💰');
-        document.getElementById('donDesc').value = '';
-        document.getElementById('donAmt').value = '';
-        refreshData();
-      }
-
-      function updateTarget() {
-        const newVal = document.getElementById('targetInput').value;
-        if (!newVal) return;
-        if (!confirm(`تغيير المستهدف للعمارة لـ ${newVal} جنيه؟`)) return;
-
-        localStorage.setItem('sakanTarget', newVal);
-        TARGET_BUILDING = parseInt(newVal);
-        alert('تم تحديث النظام! ✅');
-        refreshData();
-      }
-      // ==========================================
-      // نظام التصويت الذكي (Digital Democracy) 🗳️
-      // ==========================================
-
-      async function loadPolls() {
-        // 1. إظهار القسم
-        document.getElementById('votingSection').style.display = 'block';
-        const container = document.getElementById('activePolls');
-
-        // 2. جلب الاستطلاعات النشطة
-        const { data: polls } = await _supa
-          .from('polls')
-          .select('*')
-          .eq('is_active', true);
-
-        if (!polls || polls.length === 0) {
-          container.innerHTML =
-            '<div class="text-center text-muted small">لا توجد تصويتات نشطة حالياً</div>';
-          return;
-        }
-
-        // 3. رسم الاستطلاعات
-        let h = '';
-        for (const poll of polls) {
-          // التحقق هل صوت من قبل أم لا
-          const hasVoted = await checkIfVoted(poll.id);
-
-          h += `<div class="mb-3 pb-3 border-bottom" style="border-color:var(--border-glass)">
-                <div class="fw-bold mb-2">${poll.question}</div>`;
-
-          if (hasVoted) {
-            h += `<div class="alert alert-success py-1 small"><i class="fas fa-check-circle me-1"></i> شكراً لمشاركتك!</div>`;
-          } else {
-            // رسم الأزرار
-            h += `<div class="d-flex gap-2 justify-content-center">`;
-            poll.options.forEach((opt) => {
-              h += `<button onclick="castVote(${poll.id}, '${opt}')" class="btn btn-sm btn-outline-primary px-3 rounded-pill">${opt}</button>`;
-            });
-            h += `</div>`;
-          }
-          h += `</div>`;
-        }
-        container.innerHTML = h;
-      }
-
-      async function checkIfVoted(pollId) {
-        if (!currentUser || currentUser.role === 'admin') return false; // الأدمن لا يصوت (أو يصوت كتجربة)
-        const { data } = await _supa
-          .from('votes')
-          .select('id')
-          .eq('poll_id', pollId)
-          .eq('building_id', currentUser.bId)
-          .eq('unit_id', 1); // افتراضاً الشقة 1 للمندوب، يمكن تطويره ليختار شقته
-        return data.length > 0;
-      }
-
-      async function castVote(pollId, choice) {
-        // 1. التحقق من الأهلية المالية (الشرط الذهبي 💰)
-        // الأدمن مسموح له للتجربة
-        if (currentUser.role !== 'admin') {
-          const myData = localData[currentUser.bId];
-          const totalPaid = myData.paid; // المبلغ الذي دفعته العمارة (كمتوسط)
-          // هنا ممكن تعقيد الشرط: هل الشقة دفعت؟
-          // للتبسيط الآن: سنسمح للمندوب بالتصويت نيابة عن عمارته
-        }
-
-        // 2. تسجيل الصوت
-        // سنستخدم رقم شقة عشوائي (أو 1) لأن نظام الدخول الحالي للمناديب وليس للأفراد
-        const uId = prompt('أدخل رقم العمارة لتأكيد الصوت:');
-        if (!uId) return;
-
-        const { error } = await _supa.from('votes').insert({
-          poll_id: pollId,
-          building_id: currentUser.role === 'admin' ? 0 : currentUser.bId,
-          unit_id: parseInt(uId),
-          choice: choice,
-        });
-
-        if (error) {
-          if (error.code === '23505') alert('⛔ لقد قمت بالتصويت سابقاً!');
-          else alert('حدث خطأ');
-        } else {
-          alert('✅ تم تسجيل صوتك بنجاح!');
-          loadPolls(); // تحديث الواجهة
-        }
-      }
-      // ==========================================
-      // 🗳️ نظام التصويت الذكي (Full Voting System)
-      // ==========================================
-
-      // 1. للأدمن: إنشاء تصويت جديد
-      async function createNewPoll() {
-        const q = document.getElementById('newPollQ').value;
-        const hours = parseInt(document.getElementById('pollDuration').value);
-
-        if (!q) return alert('اكتب السؤال أولاً');
-        if (
-          !confirm(`نشر التصويت لمدة ${hours} ساعة؟ (سيتم إغلاق أي تصويت سابق)`)
-        )
-          return;
-
-        // حساب موعد الانتهاء
-        const expiryDate = new Date();
-        expiryDate.setHours(expiryDate.getHours() + hours);
-
-        // إغلاق القديم
-        await _supa.from('polls').update({ is_active: false }).neq('id', 0);
-
-        // نشر الجديد
-        const { error } = await _supa.from('polls').insert({
-          question: q,
-          options: ['نعم', 'لا'],
-          is_active: true,
-          expires_at: expiryDate.toISOString(),
-        });
-
-        if (error) alert('حدث خطأ أثناء النشر');
-        else {
-          alert(
-            '✅ تم النشر! سيظهر في الرئيسية ويختفي تلقائياً بعد انتهاء المدة.'
-          );
-          document.getElementById('newPollQ').value = '';
-          refreshData(); // تحديث فوري للشاشة
-        }
-      }
-
-      // 2. للشاشة الرئيسية: عرض النتائج (Logic: Live vs Expired)
-      async function loadPollResults() {
-        // التاريخ الحدي: نريد عرض التصويت إذا لم يمر على انتهائه 24 ساعة
-        const cutoffDate = new Date();
-        cutoffDate.setHours(cutoffDate.getHours() - 24);
-
-        // نجلب أي تصويت نشط، أو منتهي حديثاً (أقل من يوم)
-        const { data: polls } = await _supa
-          .from('polls')
-          .select('*')
-          .eq('is_active', true) // يجب أن يكون مفعل من الأدمن
-          .gt('expires_at', cutoffDate.toISOString()) // ولم يمر يوم على انتهائه
-          .limit(1);
-
-        // إذا لم نجد شيئاً، نخفي الكارت
-        if (!polls || polls.length === 0) {
-          document.getElementById('pollResultsCard').style.display = 'none';
-          return;
-        }
-
-        const poll = polls[0];
-        document.getElementById('pollResultsCard').style.display = 'block';
-        document.getElementById('pollQuestionTitle').innerText = poll.question;
-
-        // فحص هل انتهى الوقت فعلياً؟
-        const isExpired = new Date(poll.expires_at) < new Date();
-
-        if (isExpired) {
-          // حالة الانتهاء: بادج رمادي + إخفاء زر التصويت
-          document.getElementById('pollHeader').innerHTML = `
-           <h6 class="fw-bold text-muted"><i class="fas fa-vote-yea me-2"></i>تصويت المجتمع</h6>
-           <span class="badge bg-secondary">منتهي 🏁</span>
-        `;
-          document.getElementById('pollActionArea').style.display = 'none';
-        } else {
-          // حالة المباشر: بادج أحمر + إظهار زر التصويت
-          document.getElementById('pollHeader').innerHTML = `
-           <h6 class="fw-bold"><i class="fas fa-vote-yea me-2 text-primary"></i>تصويت المجتمع</h6>
-           <span class="badge bg-danger blink_me">مباشر 🔴</span>
-        `;
-          document.getElementById('pollActionArea').style.display = 'block';
-        }
-
-        // جلب الأصوات وحساب النسب
-        const { data: votes } = await _supa
-          .from('votes')
-          .select('choice')
-          .eq('poll_id', poll.id);
-
-        const totalVotes = votes.length;
-        let counts = {};
-        poll.options.forEach((opt) => (counts[opt] = 0));
-        votes.forEach((v) => (counts[v.choice] = (counts[v.choice] || 0) + 1));
-
-        let h = '';
-        poll.options.forEach((opt) => {
-          const count = counts[opt] || 0;
-          const pct =
-            totalVotes === 0 ? 0 : Math.round((count / totalVotes) * 100);
-          let color = opt === 'نعم' ? 'bg-success' : 'bg-danger';
-          // جعل الألوان باهتة لو منتهي
-          let opacity = isExpired ? '0.6' : '1';
-
-          h += `
-          <div class="mb-2" style="opacity:${opacity}">
-            <div class="d-flex justify-content-between small mb-1">
-              <span>${opt}</span>
-              <span class="fw-bold">${pct}% (${count})</span>
-            </div>
-            <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1)">
-              <div class="progress-bar ${color}" role="progressbar" style="width: ${pct}%"></div>
-            </div>
-          </div>
-        `;
-        });
-        document.getElementById('pollBarsSpace').innerHTML = h;
-      }
-
-      // 3. لصفحة الإعدادات: تحميل ورقة التصويت للسكان
-      async function loadPolls() {
-        // هنا نجلب فقط التصويتات "الحية" (التي لم ينته وقتها بعد)
-        const now = new Date().toISOString();
-        const { data: polls } = await _supa
-          .from('polls')
-          .select('*')
-          .eq('is_active', true)
-          .gt('expires_at', now); // شرط الوقت
-
-        const container = document.getElementById('activePolls');
-        if (!polls || polls.length === 0) {
-          container.innerHTML =
-            '<div class="text-center text-muted small">لا توجد تصويتات نشطة حالياً</div>';
-          document.getElementById('votingSection').style.display = 'block';
-          return;
-        }
-        document.getElementById('votingSection').style.display = 'block';
-
-        let h = '';
-        for (const poll of polls) {
-          const hasVoted = await checkIfVoted(poll.id);
-
-          h += `<div class="mb-3 pb-3 border-bottom" style="border-color:var(--border-glass)">
-                <div class="fw-bold mb-2">${poll.question}</div>`;
-
-          if (hasVoted) {
-            h += `<div class="alert alert-success py-1 small"><i class="fas fa-check-circle me-1"></i> شكراً لمشاركتك!</div>`;
-          } else {
-            h += `<div class="d-flex gap-2 justify-content-center">`;
-            poll.options.forEach((opt) => {
-              // زر التصويت
-              h += `<button onclick="castVote(${poll.id}, '${opt}')" class="btn btn-sm btn-outline-primary px-3 rounded-pill">${opt}</button>`;
-            });
-            h += `</div>`;
-          }
-          h += `</div>`;
-        }
-        container.innerHTML = h;
-      }
-
-      // 4. التحقق هل صوت من قبل
-      async function checkIfVoted(pollId) {
-        if (!currentUser) return false;
-        // للأدمن: دائماً false ليجرب
-        if (currentUser.role === 'admin') return false;
-
-        const { data } = await _supa
-          .from('votes')
-          .select('id')
-          .eq('poll_id', pollId)
-          .eq('building_id', currentUser.bId)
-          .eq('unit_id', 1); // حالياً نفترض أن المندوب يمثل شقة 1 (أو يمكن طلب رقم الشقة)
-        return data.length > 0;
-      }
-
-      // 5. إرسال الصوت
-      async function castVote(pollId, choice) {
-        // طلب رقم الشقة للتأكيد (إلا لو أدمن)
-        let uId = 1;
-        if (currentUser.role !== 'admin') {
-          const input = prompt('أدخل رقم العمارة لتأكيد الصوت:');
-          if (!input) return;
-          uId = parseInt(input);
-        } else {
-          uId = Math.floor(Math.random() * 100); // رقم عشوائي للأدمن للتجربة
-        }
-
-        const { error } = await _supa.from('votes').insert({
-          poll_id: pollId,
-          building_id: currentUser.role === 'admin' ? 0 : currentUser.bId,
-          unit_id: uId,
-          choice: choice,
-        });
-
-        if (error) {
-          if (error.code === '23505') alert('⛔ هذه الشقة صوتت بالفعل!');
-          else alert('حدث خطأ، حاول مرة أخرى.');
-        } else {
-          alert('✅ تم تسجيل صوتك بنجاح!');
-          loadPolls(); // تحديث ورقة التصويت
-          loadPollResults(); // تحديث النتائج في الخلفية
-        }
-      }
-      async function deleteCurrentPoll() {
-        if (
-          !confirm(
-            '⚠️ تحذير خطير:\nسيتم حذف السؤال الحالي وجميع الأصوات المسجلة عليه نهائياً.\n\nهل أنت متأكد؟'
-          )
-        )
-          return;
-
-        // 1. البحث عن السؤال النشط
-        const { data: polls } = await _supa
-          .from('polls')
-          .select('id')
-          .eq('is_active', true)
-          .limit(1);
-
-        if (!polls || polls.length === 0) {
-          return alert('لا يوجد سؤال نشط حالياً لحذفه.');
-        }
-
-        const pollId = polls[0].id;
-
-        // 2. حذف الأصوات أولاً
-        const { error: voteErr } = await _supa
-          .from('votes')
-          .delete()
-          .eq('poll_id', pollId);
-        if (voteErr) return alert('خطأ في حذف الأصوات');
-
-        // 3. حذف السؤال
-        const { error: pollErr } = await _supa
-          .from('polls')
-          .delete()
-          .eq('id', pollId);
-        if (pollErr) return alert('خطأ في حذف السؤال');
-
-        alert('تم الحذف بنجاح! 🗑️');
-
-        // 👇 التحديثات المهمة هنا 👇
-        refreshData(); // لتحديث الشاشة الرئيسية (إخفاء الكارت)
-        loadPolls(); // لتحديث منطقة التصويت (إخفاء السؤال من أمامك)
-      }
-      // ==========================================
-      // 🧠 دالة العرض الذكي (إدارة vs مندوب)
-      // ==========================================
-      // دالة عرض الترتيب (للجميع بلا استثناء)
-      function renderLeaderboard(buildings) {
-        // 1. ترتيب العمارات حسب المبلغ المدفوع (من الأكثر للأقل)
-        const sortedBuildings = Object.values(buildings).sort(
-          (a, b) => b.paid - a.paid
-        );
-
-        let h = '';
-        sortedBuildings.forEach((b, idx) => {
-          // أيقونات للمراكز الثلاثة الأولى
-          let icon = `<span class="badge bg-secondary rounded-circle" style="width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px">${
-            idx + 1
-          }</span>`;
-          if (idx === 0) icon = '🥇'; // ذهبية
-          if (idx === 1) icon = '🥈'; // فضية
-          if (idx === 2) icon = '🥉'; // برونزية
-
-          // لون المبلغ
-          let amtColor = idx < 3 ? 'text-warning' : 'text-primary';
-
-          h += `<tr>
-                <td style="width:30px">${icon}</td>
-                <td>عمارة ${b.id}</td>
-                <td class="text-end fw-bold ${amtColor}">${b.paid.toLocaleString()}</td>
-              </tr>`;
-        });
-
-        // وضع النتيجة في الجدول
-        const container = document.getElementById('leaderboard');
-        if (container) container.innerHTML = h;
-      }
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
