@@ -52,6 +52,10 @@
   </head>
 
   <body data-theme="light">
+    <div id="splashScreen" style="display: none">
+      <img src="Logo.jpg" class="splash-logo" alt="Loading..." />
+    </div>
+
     <div id="loginScreen">
       <img
         src="Logo.jpg"
@@ -64,6 +68,9 @@
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         "
       />
+      <div id="splashScreen" style="display: none">
+        <img src="Logo.jpg" class="splash-logo" alt="Loading..." />
+      </div>
       <div class="text-center mb-4" style="line-height: 1.2">
         <div
           class="text-white fw-bold"
@@ -98,19 +105,36 @@
         00:00
       </div>
 
-      <input
-        type="text"
-        id="userInput"
-        class="login-inp"
-        placeholder="اسم المستخدم"
-      />
-      <input
-        type="password"
-        id="passInput"
-        class="login-inp"
-        placeholder="كلمة المرور"
-      />
-      <button onclick="login()" class="login-btn">دخول النظام</button>
+      <form
+        id="loginForm"
+        onsubmit="event.preventDefault(); login();"
+        style="
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        "
+      >
+        <input
+          type="text"
+          id="userInput"
+          class="login-inp"
+          placeholder="اسم المستخدم"
+          name="username"
+          autocomplete="username"
+          required
+        />
+        <input
+          type="password"
+          id="passInput"
+          class="login-inp"
+          placeholder="كلمة المرور"
+          name="password"
+          autocomplete="current-password"
+          required
+        />
+        <button type="submit" class="login-btn">دخول النظام</button>
+      </form>
       <div
         id="loginErr"
         class="text-danger mt-3 fw-bold small"

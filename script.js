@@ -66,8 +66,13 @@ async function login() {
       username: user.username,
       id: user.id,
     };
+    localStorage.setItem('sakanUser', JSON.stringify(currentUser));
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
+    //document.getElementById('app').style.display = 'block';
+    // داخل دالة login (في حالة النجاح)
+    // بدلاً من document.getElementById('app').style.display = 'block';
+    // ضع:
+    playEntryAnimation();
     document.getElementById('navBar').style.display = 'flex';
     document.getElementById('roleDisplay').innerText = user.name;
     document.getElementById('targetInput').value = TARGET_BUILDING;
@@ -81,8 +86,25 @@ async function login() {
   }
 }
 
+/* دالة الخروج السينمائية */
 function logout() {
-  location.reload();
+  // 1. تطبيق أنيميشن الاختفاء
+  const app = document.getElementById('app');
+  const nav = document.getElementById('navBar');
+
+  // إضافة كلاس الخروج للعناصر
+  if (app) app.classList.add('animate-exit');
+  if (nav) nav.classList.add('animate-exit');
+
+  // 2. الانتظار حتى ينتهي الأنيميشن (600ms) ثم التنفيذ الفعلي
+  setTimeout(() => {
+    // مسح البيانات
+    localStorage.removeItem('sakanUser');
+    sessionStorage.setItem('justLoggedOut', 'true');
+
+    // إعادة تحميل الصفحة (ستظهر شاشة الدخول تلقائياً الآن)
+    location.reload();
+  }, 600);
 }
 
 function setupUIForUser() {
@@ -847,4 +869,97 @@ function updateRepStats(bData) {
         (lazyH += `<tr><td>شقة ${x.u}</td><td class="text-danger fw-bold">${x.paid}</td></tr>`)
     );
   document.getElementById('lazyUnits').innerHTML = lazyH;
+}
+/* =========================================
+   🚀 كود الدخول الأوتوماتيكي بالبصمة
+   ضعه في نهاية ملف script.js
+   ========================================= */
+
+// 1. استرجاع الدخول السابق (عشان مخرجش لو عملت ريفريش)
+// 1. استرجاع الدخول السابق (تم التصحيح لتشغيل الأنيميشن بسلاسة)
+window.addEventListener('load', () => {
+  const savedUser = localStorage.getItem('sakanUser');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    if (!_supa) _supa = window.supabase.createClient(DB_URL, DB_KEY);
+
+    // 👇 لاحظ هنا: لقد حذفت الأسطر التي كانت تظهر التطبيق والناف بار يدوياً
+    // (app.style.display = 'block' و navBar.style.display = 'flex')
+    // لأننا لا نريد ظهورهم فوراً، بل نريدهم أن يظهروا من خلال الأنيميشن
+
+    document.getElementById('roleDisplay').innerText = currentUser.name;
+    document.getElementById('targetInput').value = TARGET_BUILDING;
+
+    // 👇 هذا السطر هو "المايسترو" الجديد الذي سيظهر التطبيق بشكل سينمائي
+    playEntryAnimation();
+
+    setupUIForUser();
+    refreshData();
+  }
+});
+
+// 2. مراقبة البصمة للدخول التلقائي
+const passField = document.getElementById('passInput');
+const userField = document.getElementById('userInput');
+let autoLoginTimer;
+
+// هل خرجنا للتو؟
+const isJustLoggedOut = sessionStorage.getItem('justLoggedOut');
+
+if (passField) {
+  // لو إحنا لسه خارجين، هنمسح العلامة عشان المرة الجاية يدخل عادي
+  // لكن المرة دي مش هنعمل Auto Login
+  if (isJustLoggedOut) {
+    sessionStorage.removeItem('justLoggedOut');
+  } else {
+    // الكود الطبيعي: أي تغيير في الباسورد (كتابة أو بصمة) يدخلنا
+    ['input', 'change'].forEach((evt) =>
+      passField.addEventListener(evt, () => {
+        clearTimeout(autoLoginTimer);
+        if (userField.value && passField.value.length > 1) {
+          const btn = document.querySelector('.login-btn');
+          if (btn) btn.innerText = 'جاري الدخول... 🔓';
+          autoLoginTimer = setTimeout(() => login(), 800);
+        }
+      })
+    );
+
+    // فحص إضافي للآيفون (لو مش خارجين للتو)
+    setTimeout(() => {
+      if (userField.value && passField.value) login();
+    }, 1000);
+  }
+}
+function playEntryAnimation() {
+  const splash = document.getElementById('splashScreen');
+  const app = document.getElementById('app');
+  const nav = document.getElementById('navBar');
+
+  // إخفاء شاشة الدخول وإظهار شاشة التحميل
+  document.getElementById('loginScreen').style.display = 'none';
+  splash.style.display = 'flex';
+
+  // تحضير التطبيق (مخفي)
+  app.style.display = 'block';
+  nav.style.display = 'flex';
+  app.classList.add('animate-enter');
+  nav.classList.add('animate-enter');
+
+  // بعد 0.8 ثانية.. ابدأ الدخول
+  setTimeout(() => {
+    splash.style.opacity = '0'; // اخفاء اللوجو
+    setTimeout(() => {
+      splash.style.display = 'none'; // حذف اللوجو
+
+      // دخول التطبيق
+      app.classList.add('animate-visible');
+      app.classList.remove('animate-enter');
+
+      // دخول الشريط بتأخير بسيط
+      setTimeout(() => {
+        nav.classList.add('animate-visible');
+        nav.classList.remove('animate-enter');
+      }, 150);
+    }, 500);
+  }, 800);
 }
