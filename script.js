@@ -50,12 +50,10 @@ async function login() {
   errDiv.innerText = '';
   errDiv.style.display = 'none';
 
-  const { data: user, error } = await _supa
-    .from('app_users')
-    .select('*')
-    .eq('username', u)
-    .eq('password', p)
-    .single();
+  const { data: user, error } = await _supa.rpc('login_user', {
+    entered_username: u,
+    entered_password: p,
+  });
 
   if (user) {
     if (navigator.vibrate) navigator.vibrate(50);
