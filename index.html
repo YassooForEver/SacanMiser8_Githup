@@ -506,26 +506,30 @@
         </div>
 
         <div id="adminControlPanel" style="display: none">
-        <div id="secretSection" class="ios-card border border-dark mb-3" style="display: none; border-style: dashed !important; background: rgba(0,0,0,0.05);">
-        <h6 class="fw-bold mb-3 text-dark">
-            <i class="fas fa-user-secret me-2"></i>الرقابة (Super Admin)
-        </h6>
-        
-        <button onclick="openLogsModal()" class="btn btn-dark w-100 fw-bold rounded-pill mb-2">
-            <i class="fas fa-history me-2"></i> فتح سجل الدخول 🕵️‍♂️
-        </button>
-    
-        <button onclick="clearAllLogs()" class="btn btn-outline-danger w-100 fw-bold rounded-pill" style="font-size: 12px;">
-            <i class="fas fa-trash-alt me-2"></i> مسح جميع السجلات (تنظيف)
-        </button>
-    </div>
+          <div
+            id="secretSection"
+            class="ios-card border border-dark mb-3"
+            style="
+              display: none;
+              border-style: dashed !important;
+              background: rgba(0, 0, 0, 0.05);
+            "
+          >
+            <h6 class="fw-bold mb-3 text-dark">
+              <i class="fas fa-user-secret me-2"></i>الرقابة (Super Admin)
+            </h6>
             <button
-              id="superAdminBtn"
               onclick="openLogsModal()"
-              class="btn btn-dark w-100 fw-bold rounded-pill"
-              style="display: none"
+              class="btn btn-dark w-100 fw-bold rounded-pill mb-2"
             >
               <i class="fas fa-history me-2"></i> فتح سجل الدخول 🕵️‍♂️
+            </button>
+            <button
+              onclick="clearAllLogs()"
+              class="btn btn-outline-danger w-100 fw-bold rounded-pill"
+              style="font-size: 12px"
+            >
+              <i class="fas fa-trash-alt me-2"></i> مسح جميع السجلات
             </button>
           </div>
 

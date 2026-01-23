@@ -206,7 +206,10 @@ async function refreshData() {
     notifs = alertsData || [];
     updateBell();
   }
-}
+
+  // 👇 كود النقطة الحمراء على الإعدادات
+  checkActivePollsForBadge();
+} // نهاية دالة refreshData
 
 /* =========================================
    📊 دالة التقرير المالي (بتنسيق التاريخ الذكي)
@@ -716,36 +719,56 @@ async function castVote(pollId, choice) {
 }
 
 // استبدل دالة createNewPoll القديمة بهذه
+/* =========================================
+   🗳️ إنشاء تصويت جديد (مع إشعارات مزدوجة)
+   ========================================= */
 async function createNewPoll() {
   const q = document.getElementById('newPollQ').value;
   const hours = parseInt(document.getElementById('pollDuration').value);
 
   if (!q) return alert('اكتب السؤال أولاً');
-  if (!confirm('نشر التصويت؟')) return;
+  if (!confirm('هل تريد نشر التصويت وإرسال إشعارات للجميع؟ 🔔')) return;
 
   const expiryDate = new Date();
   expiryDate.setHours(expiryDate.getHours() + hours);
 
-  // إغلاق القديم
+  // 1. إغلاق أي تصويت قديم
   await _supa.from('polls').update({ is_active: false }).neq('id', 0);
 
-  // نشر الجديد مع خيار "ممتنع"
+  // 2. نشر التصويت الجديد
   const { error } = await _supa.from('polls').insert({
     question: q,
-    // 👇 هنا تمت الإضافة
     options: ['نعم', 'لا', 'ممتنع'],
     is_active: true,
     expires_at: expiryDate.toISOString(),
   });
 
-  if (error) alert('خطأ في النشر');
-  else {
-    alert('✅ تم نشر التصويت مع خيار الامتناع');
+  if (error) {
+    alert('حدث خطأ في النشر');
+  } else {
+    // --- 🔥 هنا يبدأ سحر الإشعارات 🔥 ---
+
+    // أ) الإشعار الداخلي (توثيق في النظام)
+    // نسجل أن هناك تصويت تم نشره ليظهر في سجلات التنبيهات
+    await _supa.from('expense_transactions').insert({
+      amount: 0,
+      description: `🗳️ تصويت جديد: ${q}`,
+      category: 'alert', // يظهر في الجرس
+      is_general: true,
+    });
+
+    // ب) الإشعار الخارجي (للموبايل)
+    // يرسل رسالة لكل الهواتف حتى لو التطبيق مغلق
+    await sendPushToAll(
+      '🗳️ تصويت هام مطلوب',
+      `سؤال جديد: ${q} - نرجو المشاركة برأيكم الآن.`
+    );
+
+    alert('✅ تم النشر وإرسال الإشعارات للجميع!');
     document.getElementById('newPollQ').value = '';
     refreshData();
   }
 }
-
 async function loadPollResults() {
   const cutoff = new Date();
   cutoff.setHours(cutoff.getHours() - 24);
@@ -1294,5 +1317,121 @@ async function clearAllLogs() {
     if (modal && modal.classList.contains('show')) {
       openLogsModal();
     }
+  }
+}
+
+/* =========================================
+   📲 نظام الإشعارات الخارجي (OneSignal Push)
+   ========================================= */
+async function sendPushToAll(title, message) {
+  // 1. معرف التطبيق (App ID) - ثابت
+  const ONESIGNAL_APP_ID = '975c52f9-2c01-4bc0-8cbb-60f1ff173598';
+
+  // 2. مفتاح API السري (الجديد الذي أحضرته)
+  const ONESIGNAL_API_KEY =
+    'os_v2_app_s5off6jmaff4bdf3mdy76fzvtak2x5uqpchuas4g52ksxtbeqwfvpuhrvleeopeqonyg3aes5fsa4apdmqpruzocfdsizueidozr73y';
+
+  const options = {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      // ⚠️ لاحظ: كلمة Basic بعدها مسافة ثم المفتاح
+      Authorization: `Basic ${ONESIGNAL_API_KEY}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      app_id: ONESIGNAL_APP_ID,
+      included_segments: ['All'], // إرسال لكل المشتركين
+      headings: { en: title, ar: title },
+      contents: { en: message, ar: message },
+      // إعدادات إضافية للأندرويد
+      small_icon: 'ic_stat_onesignal_default', // أيقونة الجرس الافتراضية
+      android_accent_color: 'FF0000FF', // لون أزرق للإشعار
+    }),
+  };
+
+  try {
+    const response = await fetch(
+      'https://onesignal.com/api/v1/notifications',
+      options
+    );
+    const data = await response.json();
+    console.log('✅ حالة الإرسال:', data);
+
+    if (data.errors) {
+      console.error('❌ خطأ من OneSignal:', data.errors);
+      // alert("حدثت مشكلة في إرسال الإشعار، راجع الكونسول");
+    }
+  } catch (err) {
+    console.error('❌ فشل الاتصال بـ OneSignal:', err);
+  }
+}
+/* فحص وجود تصويت نشط لوضع علامة حمراء على الإعدادات */
+async function checkActivePollsForBadge() {
+  const now = new Date().toISOString();
+
+  // هل يوجد تصويت نشط؟
+  const { data: polls } = await _supa
+    .from('polls')
+    .select('id')
+    .eq('is_active', true)
+    .gt('expires_at', now)
+    .limit(1);
+
+  const settingsTabBtn = document.querySelectorAll('.tab-item')[3]; // الزر الرابع (الإعدادات)
+
+  if (polls && polls.length > 0) {
+    // إذا وجد تصويت، هل صوتت أنا فيه؟ (سؤال متطور، ممكن نكتفي بوجود التصويت حالياً)
+    // سنضيف كلاس "تنبيه" للزر
+    if (settingsTabBtn) {
+      settingsTabBtn.style.position = 'relative';
+      if (!document.getElementById('pollBadge')) {
+        const badge = document.createElement('span');
+        badge.id = 'pollBadge';
+        badge.style.cssText =
+          'position:absolute; top:5px; right:20px; width:10px; height:10px; background:red; border-radius:50%; border:2px solid var(--bg-body);';
+        settingsTabBtn.appendChild(badge);
+      }
+    }
+  } else {
+    // إزالة النقطة لو مفيش تصويت
+    const badge = document.getElementById('pollBadge');
+    if (badge) badge.remove();
+  }
+}
+/* =========================================
+   📲 دالة إرسال الإشعارات (OneSignal)
+   ضع هذه الدالة في نهاية ملف script.js
+   ========================================= */
+async function sendPushToAll(title, message) {
+  // 1. معرف التطبيق (App ID) - ثابت
+  const ONESIGNAL_APP_ID = '975c52f9-2c01-4bc0-8cbb-60f1ff173598';
+
+  // 2. مفتاح API السري (الخاص بك)
+  const ONESIGNAL_API_KEY =
+    'os_v2_app_s5off6jmaff4bdf3mdy76fzvtak2x5uqpchuas4g52ksxtbeqwfvpuhrvleeopeqonyg3aes5fsa4apdmqpruzocfdsizueidozr73y';
+
+  const options = {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      Authorization: `Basic ${ONESIGNAL_API_KEY}`,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      app_id: ONESIGNAL_APP_ID,
+      included_segments: ['All'], // إرسال للكل
+      headings: { en: title, ar: title },
+      contents: { en: message, ar: message },
+      small_icon: 'ic_stat_onesignal_default',
+      android_accent_color: 'FF0000FF',
+    }),
+  };
+
+  try {
+    await fetch('https://onesignal.com/api/v1/notifications', options);
+    console.log('✅ تم إرسال الإشعار بنجاح');
+  } catch (err) {
+    console.error('❌ فشل الإرسال:', err);
   }
 }
