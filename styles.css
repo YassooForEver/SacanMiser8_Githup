@@ -476,9 +476,39 @@ tr {
 /* =========================================
    👋 أنيميشن الخروج (The Deep Exit)
    ========================================= */
-   .animate-exit {
-    transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
-    opacity: 0; /* يختفي */
-    filter: blur(20px); /* يصبح ضبابياً */
-    transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+.animate-exit {
+  transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
+  opacity: 0; /* يختفي */
+  filter: blur(20px); /* يصبح ضبابياً */
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+}
+
+/* =========================================
+   🖥️ تحسين العرض على الكمبيوتر (Desktop Fix)
+   يجعل الموقع يبدو كتطبيق موبايل في المنتصف
+   ========================================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 480px; /* أقصى عرض مثل الموبايل */
+    margin: 0 auto; /* توسيط في منتصف الشاشة */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* حدود جمالية */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* ظل خارجي */
+  }
+
+  /* إصلاح وضعية البار السفلي والشاشة الافتتاحية */
+  .tab-bar,
+  #splashScreen,
+  #loginScreen {
+    max-width: 480px; /* لكي لا يمتدوا بعرض الشاشة */
+    left: 50%;
+    transform: translateX(-50%); /* توسيط */
+  }
+
+  /* تعديل خاص للناف بار ليكون في مكانه الصحيح */
+  .tab-bar {
+    width: 90%; /* يعود 90% من الـ 480px */
+    bottom: 20px;
+  }
 }
