@@ -151,7 +151,7 @@ async function refreshData() {
     document.getElementById('legDebt').innerText = debt.toLocaleString();
     renderChart(tInc, tExp, debt);
   }
-  loadTransactionsChunk(true);
+  loadFinancialReport();
   refreshBuildingsStatus();
   if (currentUser && currentUser.role === 'admin') {
     const { data: alertsData } = await _supa
@@ -163,70 +163,144 @@ async function refreshData() {
   }
 }
 
-async function loadTransactionsChunk(isReset = false) {
-  const btn = document.getElementById('loadMoreBtn');
-  if (isReset) {
-    currentPage = 0;
-    isLastPage = false;
-    document.getElementById('expTable').innerHTML = '';
-    if (btn) btn.style.display = 'block';
-    if (btn) btn.innerText = 'عرض المزيد ⬇️';
-  }
-  if (isLastPage) return;
-  if (btn) btn.innerText = 'جاري التحميل... ⏳';
-  const from = currentPage * PAGE_SIZE;
-  const to = from + PAGE_SIZE - 1;
-  const { data, error } = await _supa
-    .from('all_transactions_view')
-    .select('*')
-    .order('type', { ascending: false })
-    .order('created_at', { ascending: false })
-    .range(from, to);
-  if (error) {
-    console.error(error);
-    if (btn) btn.innerText = 'خطأ في التحميل ❌';
-    return;
-  }
-  if (data.length < PAGE_SIZE) {
-    isLastPage = true;
-    if (btn) btn.style.display = 'none';
-  } else {
-    if (btn) btn.innerText = 'عرض المزيد ⬇️';
-  }
-  renderExpAppend(data);
-  currentPage++;
-}
+/* =========================================
+   📊 دالة التقرير المالي (بتنسيق التاريخ الذكي)
+   ========================================= */
+async function loadFinancialReport() {
+  const tableBody = document.getElementById('expTable');
+  const loadBtn = document.getElementById('loadMoreBtn');
 
-function renderExpAppend(list) {
-  let h = '';
-  list.forEach((x) => {
-    let cellStyle = '',
-      amtClass = '',
-      sign = '';
-    if (x.type === 'income') {
-      cellStyle =
-        'background-color: rgba(25, 135, 84, 0.1) !important; color: #198754 !important; font-weight:bold;';
-      amtClass = 'text-success';
-      sign = '+';
-    } else {
-      cellStyle =
-        'background-color: rgba(220, 53, 69, 0.1) !important; color: #dc3545 !important; font-weight:bold;';
-      amtClass = 'text-danger';
-      sign = '-';
+  if (loadBtn) loadBtn.style.display = 'none';
+  tableBody.innerHTML =
+    '<tr><td colspan="3" class="text-center">جاري تجميع البيانات... ⏳</td></tr>';
+
+  // 👇 التعديل الجوهري هنا: دالة تنسيق ذكية ومدمجة
+  const formatSmartDate = (dateStr) => {
+    const d = new Date(dateStr);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = String(d.getFullYear()).slice(-2); // نأخذ آخر رقمين فقط (26) بدلاً من 2026
+
+    let hours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    // النتيجة: التاريخ فوق بخط واضح، والوقت تحته بخط رمادي صغير
+    return `
+        <div class="d-flex flex-column align-items-center" style="line-height: 1.1;">
+            <span style="font-weight: 700; font-size: 11px; font-family: monospace;">${day}-${month}-${year}</span>
+            <span style="font-size: 9px; color: var(--text-sub); font-family: monospace;">${hours}:${minutes} ${ampm}</span>
+        </div>
+        `;
+  };
+
+  try {
+    const { data: incomeList } = await _supa
+      .from('income_transactions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    const { data: expenseList } = await _supa
+      .from('expense_transactions')
+      .select('*')
+      .neq('category', 'alert')
+      .order('created_at', { ascending: false });
+
+    let html = '';
+    let totalInc = 0;
+    let totalExp = 0;
+
+    // --- 1. قسم المساهمات ---
+    if (incomeList && incomeList.length > 0) {
+      html += `<tr style="background: rgba(48, 209, 88, 0.2)"><td colspan="3" class="fw-bold text-success text-center small">📥 ملخص التحصيل</td></tr>`;
+
+      let buildingTotals = {};
+      let externalDonations = [];
+
+      incomeList.forEach((item) => {
+        totalInc += item.amount;
+        if (item.building_id) {
+          if (!buildingTotals[item.building_id])
+            buildingTotals[item.building_id] = 0;
+          buildingTotals[item.building_id] += item.amount;
+        } else {
+          externalDonations.push(item);
+        }
+      });
+
+      // العمارات
+      const sortedBuildings = Object.keys(buildingTotals).sort(
+        (a, b) => parseInt(a) - parseInt(b)
+      );
+      sortedBuildings.forEach((bId) => {
+        if (buildingTotals[bId] > 0) {
+          html += `
+                    <tr>
+                        <td style="vertical-align: middle;">
+                            <span class="badge bg-secondary text-white" style="font-size: 9px;">تراكمي</span>
+                        </td>
+                        <td class="fw-bold small" style="vertical-align: middle;">تحصيل عمارة ${bId}</td>
+                        <td class="text-success fw-bold text-end" dir="ltr" style="vertical-align: middle;">+${buildingTotals[
+                          bId
+                        ].toLocaleString()}</td>
+                    </tr>`;
+        }
+      });
+
+      // التبرعات (استخدام التنسيق الجديد)
+      externalDonations.forEach((item) => {
+        html += `
+                <tr>
+                    <td style="width: 80px; vertical-align: middle;">${formatSmartDate(
+                      item.created_at
+                    )}</td>
+                    <td class="small" style="vertical-align: middle;">${
+                      item.notes || 'تبرع'
+                    }</td>
+                    <td class="text-success fw-bold text-end" dir="ltr" style="vertical-align: middle;">+${item.amount.toLocaleString()}</td>
+                </tr>`;
+      });
+
+      html += `<tr style="border-top: 2px solid var(--success)"><td colspan="2" class="fw-bold text-end small">الإجمالي:</td><td class="fw-bold text-success bg-glass-green text-end" dir="ltr">${totalInc.toLocaleString()}</td></tr><tr><td colspan="3" style="height: 10px;"></td></tr>`;
     }
-    const dateTime = new Date(x.created_at).toLocaleString('ar-EG', {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
-    h += `<tr><td style="${cellStyle}; font-size:11px">${dateTime}</td><td style="${cellStyle}">${
-      x.desc_text
-    }</td><td class="${amtClass}" style="${cellStyle}" dir="ltr">${sign}${x.amount.toLocaleString()}</td></tr>`;
-  });
-  document.getElementById('expTable').insertAdjacentHTML('beforeend', h);
+
+    // --- 2. قسم المصروفات ---
+    if (expenseList && expenseList.length > 0) {
+      html += `<tr style="background: rgba(255, 69, 58, 0.2)"><td colspan="3" class="fw-bold text-danger text-center small">📤 المصروفات</td></tr>`;
+
+      expenseList.forEach((item) => {
+        totalExp += item.amount;
+        html += `
+                <tr>
+                    <td style="width: 80px; vertical-align: middle;">${formatSmartDate(
+                      item.created_at
+                    )}</td>
+                    <td class="small" style="vertical-align: middle;">${
+                      item.description || 'مصروف'
+                    }</td>
+                    <td class="text-danger fw-bold text-end" dir="ltr" style="vertical-align: middle;">-${item.amount.toLocaleString()}</td>
+                </tr>`;
+      });
+
+      html += `<tr style="border-top: 2px solid var(--danger)"><td colspan="2" class="fw-bold text-end small">الإجمالي:</td><td class="fw-bold text-danger bg-glass-red text-end" dir="ltr">${totalExp.toLocaleString()}</td></tr>`;
+    }
+
+    // --- الصافي ---
+    const net = totalInc - totalExp;
+    const netColor = net >= 0 ? 'text-success' : 'text-danger';
+    html += `
+        <tr style="border-top: 4px double var(--text-main); height: 40px; vertical-align: middle;">
+            <td colspan="2" class="fw-bold text-center">💰 الصافي الحالي</td>
+            <td class="fw-bold fs-6 text-end ${netColor}" dir="ltr">${net.toLocaleString()}</td>
+        </tr>`;
+
+    tableBody.innerHTML = html;
+  } catch (err) {
+    console.error(err);
+    tableBody.innerHTML =
+      '<tr><td colspan="3" class="text-danger text-center">حدث خطأ</td></tr>';
+  }
 }
 
 async function refreshBuildingsStatus() {
@@ -749,12 +823,121 @@ function updateTarget() {
   }
 }
 
+/* =========================================
+   📥 تصدير الإكسيل (مطابق للتقرير التجميعي + تواريخ إنجليزي)
+   ========================================= */
 window.exportXLS = async function () {
-  const { data } = await _supa.from('expense_transactions').select('*');
-  const ws = XLSX.utils.json_to_sheet(data);
+  if (!confirm('تحميل تقرير إكسيل مطابق للمعروض؟')) return;
+
+  // 1. جلب البيانات
+  const { data: incomeList } = await _supa
+    .from('income_transactions')
+    .select('*')
+    .order('created_at', { ascending: false });
+  const { data: expenseList } = await _supa
+    .from('expense_transactions')
+    .select('*')
+    .neq('category', 'alert')
+    .order('created_at', { ascending: false });
+
+  // 2. تجهيز البيانات للتجميع
+  let buildingTotals = {};
+  let externalDonations = [];
+  let finalData = [];
+
+  // دالة لتنسيق التاريخ والوقت بالشكل المطلوب (إنجليزي)
+  // Format: 23-01-2026 2:48 PM
+  const formatDateTimeEn = (dateStr) => {
+    const d = new Date(dateStr);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+
+    let hours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // الساعة 0 تكون 12
+
+    return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
+  };
+
+  // --- معالجة المساهمات (Income) ---
+  if (incomeList) {
+    incomeList.forEach((item) => {
+      if (item.building_id) {
+        // تجميع العمارات
+        if (!buildingTotals[item.building_id]) {
+          buildingTotals[item.building_id] = 0;
+        }
+        buildingTotals[item.building_id] += item.amount;
+      } else {
+        // التبرعات الخارجية تبقى منفصلة
+        externalDonations.push(item);
+      }
+    });
+  }
+
+  // أ) إضافة العمارات المجمعة لملف الإكسيل
+  // نستخدم تاريخ اليوم ووقت التحميل لأنه "تجميعي"
+  const currentDateTime = formatDateTimeEn(new Date());
+  const sortedBuildings = Object.keys(buildingTotals).sort(
+    (a, b) => parseInt(a) - parseInt(b)
+  );
+
+  sortedBuildings.forEach((bId) => {
+    finalData.push({
+      'Date & Time': currentDateTime, // تاريخ التحميل لأنه رصيد تراكمي
+      Category: 'تجميعي عمارات',
+      Description: `إجمالي تحصيل عمارة ${bId}`,
+      Amount: buildingTotals[bId],
+      Type: 'Income',
+    });
+  });
+
+  // ب) إضافة التبرعات الخارجية (بتواريخها الأصلية)
+  externalDonations.forEach((item) => {
+    finalData.push({
+      'Date & Time': formatDateTimeEn(item.created_at),
+      Category: 'تبرع خارجي',
+      Description: item.notes || 'تبرع',
+      Amount: item.amount,
+      Type: 'Income',
+    });
+  });
+
+  // ج) إضافة المصروفات (Expenses)
+  if (expenseList) {
+    expenseList.forEach((item) => {
+      finalData.push({
+        'Date & Time': formatDateTimeEn(item.created_at),
+        Category: 'مصروفات',
+        Description: item.description,
+        Amount: -item.amount, // بالسالب
+        Type: 'Expense',
+      });
+    });
+  }
+
+  // 3. إنشاء الملف
+  const ws = XLSX.utils.json_to_sheet(finalData);
+
+  // تنسيق عرض الأعمدة (اختياري لتحسين الشكل)
+  const wscols = [
+    { wch: 25 }, // Date width
+    { wch: 15 }, // Category
+    { wch: 40 }, // Description
+    { wch: 15 }, // Amount
+    { wch: 10 }, // Type
+  ];
+  ws['!cols'] = wscols;
+
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Expenses');
-  XLSX.writeFile(wb, 'SacanMiser8.xlsx');
+  XLSX.utils.book_append_sheet(wb, ws, 'Financial Report');
+
+  // اسم الملف مع التاريخ الإنجليزي
+  const fileNameDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  XLSX.writeFile(wb, `SakanMiser8_Report_${fileNameDate}.xlsx`);
 };
 
 function fillResetChecks() {
