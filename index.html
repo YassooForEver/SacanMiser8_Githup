@@ -507,134 +507,161 @@
         </div>
 
         <div id="adminControlPanel" style="display: none">
-          <div
-            id="secretSection"
-            class="ios-card border border-dark mb-3"
-            style="
-              display: none;
-              border-style: dashed !important;
-              background: rgba(0, 0, 0, 0.05);
-            "
+          
+        <div
+          id="secretSection"
+          class="ios-card border border-dark mb-3"
+          style="display: none; border-style: dashed !important; background: rgba(0,0,0,0.05);"
+        >
+          <h6 class="fw-bold mb-3 text-dark">
+            <i class="fas fa-user-secret me-2"></i>الرقابة واتخاذ القرار (Super Admin)
+          </h6>
+          
+          <div class="row g-2 mb-3">
+              <div class="col-6">
+                  <button
+                    onclick="openLogsModal()"
+                    class="btn btn-dark w-100 fw-bold rounded-pill"
+                    style="font-size: 11px;"
+                  >
+                    <i class="fas fa-history me-1"></i> السجلات
+                  </button>
+              </div>
+              <div class="col-6">
+                  <button
+                    onclick="clearAllLogs()"
+                    class="btn btn-outline-danger w-100 fw-bold rounded-pill"
+                    style="font-size: 11px;"
+                  >
+                    <i class="fas fa-trash-alt me-1"></i> مسح الكل
+                  </button>
+              </div>
+          </div>
+
+          <div class="ios-card bg-white border-0 shadow-sm mb-3">
+              <h6 class="text-secondary small fw-bold mb-2">📊 سرعة التحصيل (الشهر الحالي)</h6>
+              <div style="height: 150px; position: relative;">
+                  <canvas id="velocityChart"></canvas>
+              </div>
+          </div>
+
+          <div class="ios-card bg-white border border-danger shadow-sm p-2">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="text-danger small fw-bold m-0">🚫 الممتنعين (3+ شهور)</h6>
+                  <span class="badge bg-danger rounded-pill" id="defaulterCount">0</span>
+              </div>
+              <div class="table-responsive" style="max-height: 150px;">
+                  <table class="table table-sm text-center small mb-0">
+                      <tbody id="chronicDefaultersBody"></tbody>
+                  </table>
+              </div>
+              <button onclick="copyDefaulters()" class="btn btn-sm btn-light text-danger w-100 mt-2 fw-bold" style="font-size: 10px;">
+                  <i class="fas fa-copy"></i> نسخ القائمة
+              </button>
+          </div>
+        </div> 
+        <div class="ios-card border border-primary mb-3">
+          <h6 class="text-primary fw-bold mb-3">
+            <i class="fas fa-bullhorn me-2"></i>إطلاق تصويت جديد
+          </h6>
+          <input
+            type="text"
+            id="newPollQ"
+            class="form-control mb-2"
+            placeholder="اكتب السؤال هنا..."
+          />
+          <select
+            id="pollDuration"
+            class="form-select mb-2 text-center"
+            style="font-size: 14px"
           >
-            <h6 class="fw-bold mb-3 text-dark">
-              <i class="fas fa-user-secret me-2"></i>الرقابة (Super Admin)
-            </h6>
+            <option value="24">مدة 24 ساعة (يوم)</option>
+            <option value="48">مدة 48 ساعة (يومين)</option>
+            <option value="72">مدة 72 ساعة (3 أيام)</option>
+            <option value="168">مدة أسبوع كامل</option>
+          </select>
+          <div class="d-flex gap-2">
             <button
-              onclick="openLogsModal()"
-              class="btn btn-dark w-100 fw-bold rounded-pill mb-2"
+              onclick="createNewPoll()"
+              class="btn btn-primary w-50 fw-bold"
             >
-              <i class="fas fa-history me-2"></i> فتح سجل الدخول 🕵️‍♂️
+              نشر التصويت
             </button>
             <button
-              onclick="clearAllLogs()"
-              class="btn btn-outline-danger w-100 fw-bold rounded-pill"
-              style="font-size: 12px"
+              onclick="deleteCurrentPoll()"
+              class="btn btn-outline-danger w-50"
+              title="حذف السؤال"
             >
-              <i class="fas fa-trash-alt me-2"></i> مسح جميع السجلات
-            </button>
-          </div>
-
-          <div class="ios-card border border-primary mb-3">
-            <h6 class="text-primary fw-bold mb-3">
-              <i class="fas fa-bullhorn me-2"></i>إطلاق تصويت جديد
-            </h6>
-            <input
-              type="text"
-              id="newPollQ"
-              class="form-control mb-2"
-              placeholder="اكتب السؤال هنا..."
-            />
-            <select
-              id="pollDuration"
-              class="form-select mb-2 text-center"
-              style="font-size: 14px"
-            >
-              <option value="24">مدة 24 ساعة (يوم)</option>
-              <option value="48">مدة 48 ساعة (يومين)</option>
-              <option value="72">مدة 72 ساعة (3 أيام)</option>
-              <option value="168">مدة أسبوع كامل</option>
-            </select>
-            <div class="d-flex gap-2">
-              <button
-                onclick="createNewPoll()"
-                class="btn btn-primary w-50 fw-bold"
-              >
-                نشر التصويت
-              </button>
-              <button
-                onclick="deleteCurrentPoll()"
-                class="btn btn-outline-danger w-50"
-                title="حذف السؤال"
-              >
-                <i class="fas fa-trash"></i> حذف النشط
-              </button>
-            </div>
-          </div>
-
-          <div class="ios-card border border-warning mb-3">
-            <h6 class="text-warning fw-bold mb-3">
-              <i class="fas fa-edit me-2"></i>قيمة التحصيل (شهر/عمارة)
-            </h6>
-            <div class="d-flex gap-2">
-              <input
-                type="number"
-                id="targetInput"
-                class="form-control text-center fw-bold"
-                placeholder="500"
-              />
-              <button onclick="updateTarget()" class="btn btn-warning fw-bold">
-                حفظ
-              </button>
-            </div>
-          </div>
-
-          <div class="ios-card border border-info mb-3">
-            <h6 class="text-info fw-bold mb-3">
-              <i class="fas fa-shield-alt me-2"></i>النسخ والاستعادة
-            </h6>
-            <div class="d-flex gap-2">
-              <button
-                onclick="backupSystem()"
-                class="btn btn-outline-info w-50 fw-bold"
-              >
-                <i class="fas fa-download me-2"></i>نسخ Backup
-              </button>
-              <button
-                onclick="document.getElementById('restoreFile').click()"
-                class="btn btn-outline-warning w-50 fw-bold"
-              >
-                <i class="fas fa-upload me-2"></i>استعادة
-              </button>
-              <input
-                type="file"
-                id="restoreFile"
-                style="display: none"
-                onchange="restoreSystem(this)"
-              />
-            </div>
-          </div>
-
-          <div class="ios-card border border-danger">
-            <h6 class="text-danger fw-bold mb-3">
-              <i class="fas fa-radiation me-2"></i>منطقة الخطر
-            </h6>
-            <button
-              onclick="resetSystem()"
-              class="btn btn-outline-danger w-100 mb-3 fw-bold"
-            >
-              تصفير النظام بالكامل
-            </button>
-            <hr style="border-color: var(--border-glass)" />
-            <h6 class="mb-2 text-warning small">تصفير عمارات محددة:</h6>
-            <div class="checkbox-grid mb-3" id="resetCheckGrid"></div>
-            <button
-              onclick="resetSelected()"
-              class="btn btn-warning w-100 fw-bold text-dark"
-            >
-              تصفير المحدد
+              <i class="fas fa-trash"></i> حذف النشط
             </button>
           </div>
         </div>
+
+        <div class="ios-card border border-warning mb-3">
+          <h6 class="text-warning fw-bold mb-3">
+            <i class="fas fa-edit me-2"></i>قيمة التحصيل (شهر/عمارة)
+          </h6>
+          <div class="d-flex gap-2">
+            <input
+              type="number"
+              id="targetInput"
+              class="form-control text-center fw-bold"
+              placeholder="500"
+            />
+            <button onclick="updateTarget()" class="btn btn-warning fw-bold">
+              حفظ
+            </button>
+          </div>
+        </div>
+
+        <div class="ios-card border border-info mb-3">
+          <h6 class="text-info fw-bold mb-3">
+            <i class="fas fa-shield-alt me-2"></i>النسخ والاستعادة
+          </h6>
+          <div class="d-flex gap-2">
+            <button
+              onclick="backupSystem()"
+              class="btn btn-outline-info w-50 fw-bold"
+            >
+              <i class="fas fa-download me-2"></i>نسخ Backup
+            </button>
+            <button
+              onclick="document.getElementById('restoreFile').click()"
+              class="btn btn-outline-warning w-50 fw-bold"
+            >
+              <i class="fas fa-upload me-2"></i>استعادة
+            </button>
+            <input
+              type="file"
+              id="restoreFile"
+              style="display: none"
+              onchange="restoreSystem(this)"
+            />
+          </div>
+        </div>
+
+        <div class="ios-card border border-danger">
+          <h6 class="text-danger fw-bold mb-3">
+            <i class="fas fa-radiation me-2"></i>منطقة الخطر
+          </h6>
+          <button
+            onclick="resetSystem()"
+            class="btn btn-outline-danger w-100 mb-3 fw-bold"
+          >
+            تصفير النظام بالكامل
+          </button>
+          <hr style="border-color: var(--border-glass)" />
+          <h6 class="mb-2 text-warning small">تصفير عمارات محددة:</h6>
+          <div class="checkbox-grid mb-3" id="resetCheckGrid"></div>
+          <button
+            onclick="resetSelected()"
+            class="btn btn-warning w-100 fw-bold text-dark"
+          >
+            تصفير المحدد
+          </button>
+        </div>
+
+      </div>
 
         <div id="repControlPanel" style="display: none">
           <div class="ios-card">

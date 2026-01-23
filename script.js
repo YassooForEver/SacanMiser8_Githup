@@ -139,9 +139,8 @@ function setupUIForUser() {
     document.getElementById('adminControlPanel').style.display = 'block';
     document.getElementById('donationCard').style.display = 'block';
     document.getElementById('userManagementCard').style.display = 'block';
-
-    fillExpSelect();
-    fillResetChecks();
+    renderVelocityChart();
+    loadChronicDefaulters();
 
     // 🔴 2. المنطقة المحرمة (Super Admin Zone)
     // هذا الكود يتحكم في الكارت "secretSection" بالكامل
@@ -153,6 +152,8 @@ function setupUIForUser() {
     if (secretCard) {
       if (exactUser === 'admin') {
         secretCard.style.display = 'block'; // ✅ يظهر فقط لهذا الشخص
+        fillExpSelect();
+        fillResetChecks();
       } else {
         secretCard.style.display = 'none'; // ❌ يختفي تماماً لأي شخص آخر
       }
@@ -1452,4 +1453,159 @@ async function sendPushToAll(title, message) {
   } catch (err) {
     console.error('❌ فشل الإرسال:', err);
   }
+}
+/* =========================================
+   📊 إحصائيات اتخاذ القرار (MBA Modules)
+   ========================================= */
+
+// 1. رسم سرعة التحصيل (Collection Velocity)
+async function renderVelocityChart() {
+  const ctx = document.getElementById('velocityChart');
+  if (!ctx) return;
+
+  // تحديد بداية ونهاية الشهر الحالي
+  const date = new Date();
+  const firstDay = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  ).toISOString();
+  const lastDay = new Date(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    0
+  ).toISOString();
+
+  // جلب كل عمليات "الإيراد" (income) لهذا الشهر
+  const { data: txs } = await _supa
+    .from('expense_transactions')
+    .select('amount, created_at')
+    .eq('category', 'income')
+    .gte('created_at', firstDay)
+    .lte('created_at', lastDay)
+    .order('created_at', { ascending: true });
+
+  if (!txs) return;
+
+  // تجميع البيانات: (يوم 1: 500ج، يوم 2: 1000ج...)
+  let dailyTotals = {};
+  // ملء الأيام من 1 إلى اليوم الحالي بـ أصفار مبدئياً
+  const today = new Date().getDate();
+  for (let i = 1; i <= today; i++) dailyTotals[i] = 0;
+
+  // توزيع المبالغ على الأيام
+  txs.forEach((t) => {
+    const d = new Date(t.created_at).getDate();
+    dailyTotals[d] = (dailyTotals[d] || 0) + t.amount;
+  });
+
+  // تجهيز البيانات للرسم
+  const labels = Object.keys(dailyTotals);
+  const dataPoints = Object.values(dailyTotals);
+
+  // التحقق من وجود رسم قديم وتدميره (لتجنب التداخل)
+  if (window.velocityChartInstance) window.velocityChartInstance.destroy();
+
+  // إنشاء الرسم الجديد
+  window.velocityChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'تحصيل يومي',
+          data: dataPoints,
+          borderColor: '#0a84ff', // لون أزرق (Apple)
+          backgroundColor: 'rgba(10, 132, 255, 0.1)',
+          tension: 0.4, // نعومة المنحنى
+          fill: true,
+          pointRadius: 3,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { display: false }, // إخفاء الأرقام الجانبية للتبسيط
+        x: { grid: { display: false } },
+      },
+      plugins: {
+        legend: { display: false },
+      },
+    },
+  });
+}
+
+// 2. كشف الممتنعين المزمنين (Chronic Defaulters)
+async function loadChronicDefaulters() {
+  const tbody = document.getElementById('chronicDefaultersBody');
+  const badge = document.getElementById('defaulterCount');
+  if (!tbody) return;
+
+  // 1. معرفة قيمة الاشتراك الشهري الحالية
+  const { data: config } = await _supa
+    .from('financial_config')
+    .select('target_amount')
+    .single();
+  const monthlyFee = config ? config.target_amount : 0;
+
+  if (monthlyFee === 0) return;
+
+  // حد الخطر: أي حد عليه أكثر من 3 شهور
+  const dangerLimit = monthlyFee * 3;
+
+  // 2. جلب الشقق التي ديونها أكبر من الحد
+  const { data: units } = await _supa
+    .from('units')
+    .select('*')
+    .gt('debt', dangerLimit - 1) // -1 للتأكد
+    .order('debt', { ascending: false }) // الأكبر مديونية أولاً
+    .limit(10); // هات أخطر 10 فقط
+
+  // 3. العرض في الجدول
+  tbody.innerHTML = '';
+  if (units && units.length > 0) {
+    badge.innerText = units.length;
+    units.forEach((u) => {
+      const months = (u.debt / monthlyFee).toFixed(1); // كم شهر متأخر
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+              <td class="fw-bold">${u.building_id} / ${u.unit_no}</td>
+              <td class="text-danger fw-bold">${u.debt} ج.م <br><span style="font-size:9px; color:gray">(${months} شهر)</span></td>
+              <td>
+                  <button onclick="alert('سيتم إرسال إنذار للشقة ${u.unit_no}')" class="btn btn-sm btn-light text-danger p-1">
+                      <i class="fas fa-exclamation-triangle"></i>
+                  </button>
+              </td>
+          `;
+      tbody.appendChild(tr);
+    });
+  } else {
+    tbody.innerHTML =
+      '<tr><td colspan="3" class="text-success py-3">ممتاز! لا يوجد متعثرين مزمنين 🎉</td></tr>';
+    badge.innerText = '0';
+  }
+}
+
+// 3. دالة مساعدة لنسخ القائمة (لإرسالها واتساب للأمن مثلاً)
+function copyDefaulters() {
+  const rows = document.querySelectorAll('#chronicDefaultersBody tr');
+  if (rows.length === 0 || rows[0].innerText.includes('ممتاز'))
+    return alert('القائمة فارغة!');
+
+  let text = '*🚨 قائمة الشقق الممتنعة (أكثر من 3 شهور):*\n\n';
+  rows.forEach((row) => {
+    const cols = row.querySelectorAll('td');
+    if (cols.length > 0) {
+      text += `🏢 شقة: ${cols[0].innerText} - 💰 عليه: ${
+        cols[1].innerText.split('\n')[0]
+      }\n`;
+    }
+  });
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert('✅ تم نسخ القائمة! يمكنك لصقها الآن في واتساب.');
+  });
 }
