@@ -67,6 +67,23 @@ async function login() {
       id: user.id,
     };
     localStorage.setItem('sakanUser', JSON.stringify(currentUser));
+    // ... (داخل if user الموجودة) ...
+    localStorage.setItem('sakanUser', JSON.stringify(currentUser));
+
+    // 🔴 [جديد] تسجيل حركة الدخول في الداتابيز
+    const { data: logEntry } = await _supa
+      .from('access_logs')
+      .insert({
+        username: user.username,
+        display_name: user.name,
+      })
+      .select()
+      .single();
+
+    // نحفظ رقم العملية عشان نحدثها لما يخرج
+    if (logEntry) localStorage.setItem('currentLogId', logEntry.id);
+
+    // ... (باقي كود الدخول العادي) ...
     document.getElementById('loginScreen').style.display = 'none';
     //document.getElementById('app').style.display = 'block';
     // داخل دالة login (في حالة النجاح)
@@ -87,43 +104,71 @@ async function login() {
 }
 
 /* دالة الخروج السينمائية */
-function logout() {
-  // 1. تطبيق أنيميشن الاختفاء
+/* دالة الخروج (مع تسجيل وقت الخروج) */
+async function logout() {
+  // 1. تحديث سجل الخروج في الداتابيز
+  const logId = localStorage.getItem('currentLogId');
+  if (logId) {
+    await _supa
+      .from('access_logs')
+      .update({ logout_time: new Date().toISOString() })
+      .eq('id', logId);
+    localStorage.removeItem('currentLogId');
+  }
+
+  // 2. أنيميشن الخروج المعتاد
   const app = document.getElementById('app');
   const nav = document.getElementById('navBar');
-
-  // إضافة كلاس الخروج للعناصر
   if (app) app.classList.add('animate-exit');
   if (nav) nav.classList.add('animate-exit');
 
-  // 2. الانتظار حتى ينتهي الأنيميشن (600ms) ثم التنفيذ الفعلي
   setTimeout(() => {
-    // مسح البيانات
     localStorage.removeItem('sakanUser');
     sessionStorage.setItem('justLoggedOut', 'true');
-
-    // إعادة تحميل الصفحة (ستظهر شاشة الدخول تلقائياً الآن)
     location.reload();
   }, 600);
 }
 
 function setupUIForUser() {
+  // 1. فحص هل هو مدير عام؟
   if (currentUser.role === 'admin') {
+    // إظهار لوحات التحكم العادية لكل المديرين
     document.getElementById('addCard').style.display = 'block';
     document.getElementById('excelBtn').style.display = 'block';
     document.getElementById('adminBell').style.display = 'flex';
     document.getElementById('adminControlPanel').style.display = 'block';
     document.getElementById('donationCard').style.display = 'block';
     document.getElementById('userManagementCard').style.display = 'block';
+
     fillExpSelect();
     fillResetChecks();
+
+    // 🔴 2. المنطقة المحرمة (Super Admin Zone)
+    // هذا الكود يتحكم في الكارت "secretSection" بالكامل
+    const secretCard = document.getElementById('secretSection');
+
+    // تنظيف الاسم للتأكد (حروف صغيرة وبدون مسافات)
+    const exactUser = currentUser.username.trim().toLowerCase();
+
+    if (secretCard) {
+      if (exactUser === 'admin') {
+        secretCard.style.display = 'block'; // ✅ يظهر فقط لهذا الشخص
+      } else {
+        secretCard.style.display = 'none'; // ❌ يختفي تماماً لأي شخص آخر
+      }
+    }
   } else {
+    // إخفاء كل شيء للمستخدم العادي (المندوب)
     document.getElementById('addCard').style.display = 'none';
     document.getElementById('excelBtn').style.display = 'none';
     document.getElementById('adminBell').style.display = 'none';
     document.getElementById('repControlPanel').style.display = 'block';
     document.getElementById('donationCard').style.display = 'none';
     document.getElementById('userManagementCard').style.display = 'none';
+
+    // تأكيد إخفاء القسم السري للمندوب أيضاً
+    const secretCard = document.getElementById('secretSection');
+    if (secretCard) secretCard.style.display = 'none';
   }
 }
 
@@ -1145,4 +1190,109 @@ function playEntryAnimation() {
       }, 150);
     }, 500);
   }, 800);
+}
+/* =========================================
+   📅 تحديث سنة التوقيع تلقائياً (Auto Year)
+   ========================================= */
+// هذا الكود يبحث عن العنصر dynamicYear ويضع فيه السنة الحالية من جهاز المستخدم
+if (document.getElementById('dynamicYear')) {
+  document.getElementById('dynamicYear').innerText = new Date().getFullYear();
+}
+/* =========================================
+   🕵️‍♂️ نظام المراقبة والسجلات (Logs System)
+   ========================================= */
+async function openLogsModal() {
+  const tbody = document.getElementById('logsTableBody');
+  tbody.innerHTML = '<tr><td colspan="4">جاري تحميل السجلات... 📡</td></tr>';
+
+  new bootstrap.Modal(document.getElementById('logsModal')).show();
+
+  // جلب آخر 50 حركة دخول
+  const { data: logs } = await _supa
+    .from('access_logs')
+    .select('*')
+    .order('login_time', { ascending: false })
+    .limit(50);
+
+  if (!logs || logs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4">لا توجد سجلات بعد</td></tr>';
+    return;
+  }
+
+  let html = '';
+  logs.forEach((log) => {
+    // تنسيق الوقت
+    const loginDate = new Date(log.login_time);
+    const timeStr = loginDate.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    const dateStr = loginDate.toLocaleDateString('en-GB'); // DD/MM
+
+    // حساب مدة البقاء
+    let durationStr = '<span class="text-success fw-bold">نشط الآن 🟢</span>';
+    let logoutTimeStr = '-';
+
+    if (log.logout_time) {
+      const logoutDate = new Date(log.logout_time);
+      logoutTimeStr = logoutDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      // معادلة حساب الفرق
+      const diffMs = logoutDate - loginDate;
+      const diffMins = Math.floor(diffMs / 60000);
+      const hrs = Math.floor(diffMins / 60);
+      const mins = diffMins % 60;
+
+      if (hrs > 0) durationStr = `${hrs}س ${mins}د`;
+      else durationStr = `${mins} دقيقة`;
+    }
+
+    html += `
+        <tr>
+            <td class="text-start">
+                <div class="fw-bold">${log.display_name}</div>
+                <div class="small text-muted" style="font-size:10px">${log.username}</div>
+            </td>
+            <td>
+                <div class="fw-bold">${timeStr}</div>
+                <div class="small text-muted" style="font-size:10px">${dateStr}</div>
+            </td>
+            <td class="text-danger fw-bold">${logoutTimeStr}</td>
+            <td class="small">${durationStr}</td>
+        </tr>`;
+  });
+
+  tbody.innerHTML = html;
+}
+/* =========================================
+   🗑️ دالة مسح جميع سجلات الدخول (للسوبر أدمن)
+   ========================================= */
+async function clearAllLogs() {
+  // 1. رسالة تحذير وتأكيد
+  if (!confirm('⚠️ هل أنت متأكد؟ سيتم مسح سجلات دخول الموظفين بالكامل!'))
+    return;
+
+  // تأكيد إضافي لمنع الخطأ
+  const check = prompt('للتأكيد اكتب كلمة: مسح');
+  if (check !== 'مسح') return alert('تم الإلغاء.');
+
+  // 2. تنفيذ الحذف في Supabase
+  // نقوم بحذف كل الصفوف التي لا يساوي رقمها 0 (عملياً يحذف الكل)
+  const { error } = await _supa.from('access_logs').delete().neq('id', 0);
+
+  if (error) {
+    console.error(error);
+    alert('حدث خطأ أثناء المسح!');
+  } else {
+    alert('🧹 تم تنظيف السجلات بنجاح! السجل الآن فارغ تماماً.');
+
+    // لو المودال مفتوح، نحدثه عشان يفضى قدامك
+    const modal = document.getElementById('logsModal');
+    if (modal && modal.classList.contains('show')) {
+      openLogsModal();
+    }
+  }
 }
