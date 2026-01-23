@@ -649,3 +649,82 @@ tr {
     filter: brightness(1.3);
   }
 }
+/* =========================================
+   ❤️ أنيميشن النبض (Live Heartbeat)
+   ========================================= */
+
+/* 1. تعريف الحركة */
+@keyframes softPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 69, 58, 0.9); /* تقليل الشفافية ليكون أوضح */
+  }
+
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 69, 58, 0); /* تكبير مدى الظل */
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 69, 58, 0);
+  }
+}
+
+/* 2. تطبيق الحركة على الكلاس */
+/* تعديل لضمان عمل النبض */
+.blink_me {
+  animation: softPulse 2s infinite ease-in-out; /* حركة ناعمة */
+  display: inline-flex !important; /* تأكيد العرض */
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  padding: 4px 10px; /* مساحة للظل */
+  margin-left: 5px;
+}
+/* =========================================
+   💓 نبض زر الخروج (Smart Heartbeat)
+   ========================================= */
+
+/* =========================================
+   ❤️ نبض زر الخروج (Elegant Neon Pulse)
+   ========================================= */
+
+/* 1. تعريف الحركة */
+@keyframes smoothGlow {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(255, 69, 58, 0)); /* بدون وهج */
+    opacity: 0.8; /* لون هادي */
+  }
+  50% {
+    transform: scale(1.1); /* تكبير بسيط جداً ومتناسق */
+    filter: var(--neon-glow); /* الوهج حسب الوضع */
+    opacity: 1; /* لون صريح */
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0 rgba(255, 69, 58, 0));
+    opacity: 0.8;
+  }
+}
+
+/* 2. الكلاس الأساسي */
+.logout-pulse {
+  animation: smoothGlow 2.5s infinite ease-in-out; /* بطيء وناعم */
+  transform-origin: center; /* التكبير من المنتصف بالظبط عشان متهزش */
+  display: inline-block; /* ضروري لانتظام الحركة */
+  vertical-align: middle; /* محاذاة مع باقي العناصر */
+  color: #ff453a !important; /* اللون الأحمر الأساسي */
+}
+
+/* 🌙 الوضع الليلي: نيون أحمر مشع (Real Neon) */
+[data-theme='dark'] .logout-pulse {
+  --neon-glow: drop-shadow(0 0 8px rgba(255, 69, 58, 0.9));
+}
+
+/* ☀️ الوضع النهاري: مجرد تكبير ولون أحمر (بدون نيون مزعج) */
+[data-theme='light'] .logout-pulse {
+  --neon-glow: drop-shadow(0 0 2px rgba(220, 53, 69, 0.3));
+  color: #dc3545 !important; /* أحمر داكن قليلاً للوضوح */
+}

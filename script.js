@@ -1366,9 +1366,12 @@ async function sendPushToAll(title, message) {
     console.error('❌ فشل الاتصال بـ OneSignal:', err);
   }
 }
-/* فحص وجود تصويت نشط لوضع علامة حمراء على الإعدادات */
+/* =========================================
+   🔔 فحص التصويتات (وتشغيل نبض الزرار)
+   ========================================= */
 async function checkActivePollsForBadge() {
   const now = new Date().toISOString();
+  const logoutBtn = document.getElementById('logoutBtn');
 
   // هل يوجد تصويت نشط؟
   const { data: polls } = await _supa
@@ -1378,11 +1381,18 @@ async function checkActivePollsForBadge() {
     .gt('expires_at', now)
     .limit(1);
 
-  const settingsTabBtn = document.querySelectorAll('.tab-item')[3]; // الزر الرابع (الإعدادات)
+  const settingsTabBtn = document.querySelectorAll('.tab-item')[3]; // زر الإعدادات
 
   if (polls && polls.length > 0) {
-    // إذا وجد تصويت، هل صوتت أنا فيه؟ (سؤال متطور، ممكن نكتفي بوجود التصويت حالياً)
-    // سنضيف كلاس "تنبيه" للزر
+    // ✅ حالة: يوجد تصويت نشط
+
+    // 1. تشغيل نبض زر الخروج (تنبيه سينمائي)
+    if (logoutBtn) {
+      logoutBtn.classList.add('logout-pulse'); // ركبنا الموتور
+      logoutBtn.classList.remove('text-danger'); // شلنا اللون الثابت
+    }
+
+    // 2. وضع نقطة حمراء على الإعدادات
     if (settingsTabBtn) {
       settingsTabBtn.style.position = 'relative';
       if (!document.getElementById('pollBadge')) {
@@ -1394,7 +1404,15 @@ async function checkActivePollsForBadge() {
       }
     }
   } else {
-    // إزالة النقطة لو مفيش تصويت
+    // ❌ حالة: لا يوجد تصويت
+
+    // 1. إيقاف نبض زر الخروج
+    if (logoutBtn) {
+      logoutBtn.classList.remove('logout-pulse'); // طفينا الموتور
+      logoutBtn.classList.add('text-danger'); // رجعنا لونه أحمر ثابت
+    }
+
+    // 2. إزالة النقطة الحمراء
     const badge = document.getElementById('pollBadge');
     if (badge) badge.remove();
   }
