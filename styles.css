@@ -512,3 +512,3422 @@ tr {
     bottom: 20px;
   }
 }
+/* =========================================
+    تصميم التوقيع الاحترافي (Signature Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية (لتثبيته في الأسفل) */
+/* =========================================
+    تصميم التوقيع السينمائي العريض (Wide Cinema Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية */
+.signature-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: auto;
+  position: relative;
+  z-index: 100;
+}
+
+/* 2. الشريط العريض (بدلاً من الكبسولة) */
+.glass-capsule {
+  width: 100%;
+  border-radius: 0; /* إلغاء التدوير */
+  display: flex;
+  flex-direction: column; /* العناصر فوق بعض */
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px; /* مساحة واسعة */
+
+  /* الوضع النهاري: شفاف مع خط علوي أنيق */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1)
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* 3. الأيقونة (في المنتصف من الأعلى) */
+.sig-icon {
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 15px; /* مسافة بين الأيقونة والعنوان */
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+/* 4. حاوية النصوص */
+.sig-content {
+  width: 100%;
+  text-align: center; /* توسيط كل شيء */
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter',
+    sans-serif;
+}
+
+/* 5. اسم البراند (التراكي العريض جداً) */
+.sig-brand {
+  /* الوضع النهاري */
+  color: #000000;
+  font-size: 14px; /* حجم مناسب */
+  font-weight: 700;
+  letter-spacing: 8px; /* 🔥 التباعد الكبير المطلوب 🔥 */
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  width: 100%;
+  display: block;
+}
+
+/* 6. اسم المطور (صغير وناعم) */
+.sig-creator {
+  /* الوضع النهاري */
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* 7. السنة (أصغر شيء) */
+.sig-copy {
+  color: #888;
+  font-size: 9px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+/* =========================================
+ 🌙 وضع النيون الليلي (Dark Mode Cinema)
+ ========================================= */
+[data-theme='dark'] .glass-capsule {
+  /* خلفية داكنة شفافة */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+
+  /* خط نيون علوي فقط */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* توهج خفيف من الخط العلوي */
+  box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05);
+}
+
+[data-theme='dark'] .sig-brand {
+  /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme='dark'] .sig-creator {
+  color: #a1a1a6; /* تيتانيوم */
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .sig-copy {
+  color: #6e6e73;
+}
+
+[data-theme='dark'] .sig-icon i {
+  text-shadow: 0 0 15px var(--accent);
+  animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+/* =========================================
+   1. الإعدادات والمتغيرات (Variables & Themes)
+   تم ضبط الألوان لتدعم التبديل بين الوضعين
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  /* --- الوضع الداكن (الافتراضي) - Dark Glass --- */
+  --bg-body: #000000;
+
+  /* خلفية الأورورا للوضع الداكن */
+  --bg-image: radial-gradient(
+      at 0% 0%,
+      hsla(253, 16%, 7%, 1) 0,
+      transparent 50%
+    ),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+
+  /* خصائص الزجاج */
+  --glass-bg: rgba(255, 255, 255, 0.05); /* شفافية عالية */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 25px;
+
+  /* النصوص والعناصر */
+  --text-main: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.7);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* ألوان النظام (Apple Colors) */
+  --accent: #0a84ff;
+  --success: #30d158;
+  --danger: #ff453a;
+  --warning: #ffd60a;
+}
+
+[data-theme='light'] {
+  /* --- الوضع النهاري (الجديد) - Icy Glass --- */
+  --bg-body: #f2f2f7;
+
+  /* خلفية فاتحة متموجة للوضع النهاري */
+  --bg-image: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+
+  /* زجاج ثلجي (أكثر عتامة قليلاً ليظهر على الفاتح) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 30px;
+
+  /* نصوص داكنة */
+  --text-main: #1c1c1e;
+  --text-sub: #666;
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* =========================================
+      2. إعدادات الجسم والخلفية (Base Layout)
+      ========================================= */
+body {
+  background-color: var(--bg-body);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  padding-bottom: 120px; /* تم استعادة البعد القديم 120px */
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+      3. الكروت والزجاج (Glass Components)
+      ========================================= */
+
+/* الميكس الخاص بالزجاج المبلول */
+.ios-card,
+.header,
+.tab-bar,
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: 20px; /* تم استعادة التقويس القديم */
+}
+
+.ios-card {
+  padding: 18px; /* تم استعادة الـ Padding القديم للحفاظ على الأبعاد */
+  margin-bottom: 15px;
+}
+
+/* =========================================
+      4. الهيدر (Header)
+      ========================================= */
+.header {
+  position: sticky;
+  top: 10px; /* مسافة بسيطة من الأعلى */
+  margin: 0 10px; /* هوامش جانبية */
+  z-index: 1000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+}
+
+/* =========================================
+      5. الشبكات (Grids) - تم استعادة الأبعاد القديمة
+      ========================================= */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; /* تم استعادة الفجوة القديمة */
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; /* تم استعادة الفجوة القديمة */
+}
+
+/* عناصر العمارات */
+.b-item {
+  background: var(--glass-bg); /* استخدام متغير الزجاج */
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 12px 5px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+.b-item:active {
+  transform: scale(0.96);
+}
+.b-item.my-b {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.4);
+}
+
+/* مربعات الشقق */
+.unit-box {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff; /* النص دائماً أبيض داخل المربعات الملونة */
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: 0.2s;
+}
+.unit-box:active {
+  transform: scale(0.95);
+}
+
+.u-txt {
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+}
+
+/* ألوان الحالة (زجاجية ومضيئة) */
+.bg-green {
+  background: linear-gradient(
+    135deg,
+    rgba(48, 209, 88, 0.8),
+    rgba(32, 170, 69, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(48, 209, 88, 0.4);
+}
+.bg-red {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 69, 58, 0.8),
+    rgba(214, 50, 44, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.4);
+}
+.bg-yellow {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 214, 10, 0.8),
+    rgba(240, 185, 11, 0.9)
+  );
+  color: #000;
+  text-shadow: none;
+  box-shadow: 0 4px 15px rgba(255, 214, 10, 0.4);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.dot-green {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+.dot-red {
+  background: var(--danger);
+}
+
+/* =========================================
+      6. المدخلات والأزرار (Inputs & Buttons)
+      ========================================= */
+/* إصلاح مشكلة الألوان في الوضع النهاري */
+.form-control,
+.form-select,
+.login-inp {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-main) !important;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus,
+.login-inp:focus {
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+  border-color: var(--accent) !important;
+}
+
+/* الأزرار */
+.login-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 16px;
+  width: 85%;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 20px rgba(10, 132, 255, 0.4);
+  transition: 0.3s;
+}
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+      7. شاشة الدخول (Login Screen)
+      ========================================= */
+#loginScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* الخلفية تأخذ من البودي لضمان التناسق */
+  background: transparent;
+  backdrop-filter: blur(10px); /* تمويه خفيف فوق الخلفية الأصلية */
+}
+
+/* حقول شاشة الدخول */
+.login-inp {
+  width: 85%;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* النصوص في شاشة الدخول */
+#loginScreen .text-white,
+#loginClock {
+  color: var(--text-main) !important; /* ليتحول للأسود في الوضع النهاري */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+      8. شريط التنقل (Tab Bar)
+      ========================================= */
+/* =========================================
+   8. شريط التنقل (Tab Bar) - تم التعديل
+   ========================================= */
+.tab-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 5%;
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+
+  /* 👇 التعديل هنا: خفضنا الرقم ليكون تحت المودال (المودال 1055) */
+  z-index: 1000;
+
+  border-radius: 40px;
+}
+
+.tab-item {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+}
+.tab-item i {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.tab-item.active {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+      9. إضافات أخرى (Utils)
+      ========================================= */
+.chart-legend {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.legend-item span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.check-item {
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+}
+.check-item input {
+  transform: scale(1.3);
+  margin-bottom: 5px;
+  accent-color: var(--danger);
+}
+
+/* الجداول */
+.table {
+  color: var(--text-main) !important;
+  --bs-table-color: var(--text-main) !important;
+  --bs-table-bg: transparent !important;
+}
+tr {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* زر الإغلاق */
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-theme='light'] .btn-close {
+  filter: none;
+}
+
+/* الجرس */
+.bell-wrap {
+  position: relative;
+  cursor: pointer;
+  padding: 5px;
+}
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--danger);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+}
+.shake {
+  animation: shake 1.5s infinite;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-15deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(15deg);
+  }
+}
+/* =========================================
+   🎬 أنيميشن الدخول السينمائي (Portal Zoom)
+   ========================================= */
+.animate-enter {
+  opacity: 0;
+  transform: scale(0.95) translateY(15px);
+  filter: blur(10px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+#splashScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-body); /* يأخذ لون الخلفية (أسود أو فاتح) */
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+.splash-logo {
+  width: 120px;
+  animation: pulseLogo 1.5s infinite alternate;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(10, 132, 255, 0.3);
+}
+
+@keyframes pulseLogo {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+/* =========================================
+   👋 أنيميشن الخروج (The Deep Exit)
+   ========================================= */
+.animate-exit {
+  transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
+  opacity: 0; /* يختفي */
+  filter: blur(20px); /* يصبح ضبابياً */
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+}
+
+/* =========================================
+   🖥️ تحسين العرض على الكمبيوتر (Desktop Fix)
+   يجعل الموقع يبدو كتطبيق موبايل في المنتصف
+   ========================================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 480px; /* أقصى عرض مثل الموبايل */
+    margin: 0 auto; /* توسيط في منتصف الشاشة */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* حدود جمالية */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* ظل خارجي */
+  }
+
+  /* إصلاح وضعية البار السفلي والشاشة الافتتاحية */
+  .tab-bar,
+  #splashScreen,
+  #loginScreen {
+    max-width: 480px; /* لكي لا يمتدوا بعرض الشاشة */
+    left: 50%;
+    transform: translateX(-50%); /* توسيط */
+  }
+
+  /* تعديل خاص للناف بار ليكون في مكانه الصحيح */
+  .tab-bar {
+    width: 90%; /* يعود 90% من الـ 480px */
+    bottom: 20px;
+  }
+}
+/* =========================================
+    تصميم التوقيع الاحترافي (Signature Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية (لتثبيته في الأسفل) */
+/* =========================================
+    تصميم التوقيع السينمائي العريض (Wide Cinema Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية */
+.signature-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: auto;
+  position: relative;
+  z-index: 100;
+}
+
+/* 2. الشريط العريض (بدلاً من الكبسولة) */
+.glass-capsule {
+  width: 100%;
+  border-radius: 0; /* إلغاء التدوير */
+  display: flex;
+  flex-direction: column; /* العناصر فوق بعض */
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px; /* مساحة واسعة */
+
+  /* الوضع النهاري: شفاف مع خط علوي أنيق */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1)
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* 3. الأيقونة (في المنتصف من الأعلى) */
+.sig-icon {
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 15px; /* مسافة بين الأيقونة والعنوان */
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+/* 4. حاوية النصوص */
+.sig-content {
+  width: 100%;
+  text-align: center; /* توسيط كل شيء */
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter',
+    sans-serif;
+}
+
+/* 5. اسم البراند (التراكي العريض جداً) */
+.sig-brand {
+  /* الوضع النهاري */
+  color: #000000;
+  font-size: 14px; /* حجم مناسب */
+  font-weight: 700;
+  letter-spacing: 8px; /* 🔥 التباعد الكبير المطلوب 🔥 */
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  width: 100%;
+  display: block;
+}
+
+/* 6. اسم المطور (صغير وناعم) */
+.sig-creator {
+  /* الوضع النهاري */
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* 7. السنة (أصغر شيء) */
+.sig-copy {
+  color: #888;
+  font-size: 9px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+/* =========================================
+ 🌙 وضع النيون الليلي (Dark Mode Cinema)
+ ========================================= */
+[data-theme='dark'] .glass-capsule {
+  /* خلفية داكنة شفافة */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+
+  /* خط نيون علوي فقط */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* توهج خفيف من الخط العلوي */
+  box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05);
+}
+
+[data-theme='dark'] .sig-brand {
+  /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme='dark'] .sig-creator {
+  color: #a1a1a6; /* تيتانيوم */
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .sig-copy {
+  color: #6e6e73;
+}
+
+[data-theme='dark'] .sig-icon i {
+  text-shadow: 0 0 15px var(--accent);
+  animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+/* =========================================
+   1. الإعدادات والمتغيرات (Variables & Themes)
+   تم ضبط الألوان لتدعم التبديل بين الوضعين
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  /* --- الوضع الداكن (الافتراضي) - Dark Glass --- */
+  --bg-body: #000000;
+
+  /* خلفية الأورورا للوضع الداكن */
+  --bg-image: radial-gradient(
+      at 0% 0%,
+      hsla(253, 16%, 7%, 1) 0,
+      transparent 50%
+    ),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+
+  /* خصائص الزجاج */
+  --glass-bg: rgba(255, 255, 255, 0.05); /* شفافية عالية */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 25px;
+
+  /* النصوص والعناصر */
+  --text-main: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.7);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* ألوان النظام (Apple Colors) */
+  --accent: #0a84ff;
+  --success: #30d158;
+  --danger: #ff453a;
+  --warning: #ffd60a;
+}
+
+[data-theme='light'] {
+  /* --- الوضع النهاري (الجديد) - Icy Glass --- */
+  --bg-body: #f2f2f7;
+
+  /* خلفية فاتحة متموجة للوضع النهاري */
+  --bg-image: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+
+  /* زجاج ثلجي (أكثر عتامة قليلاً ليظهر على الفاتح) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 30px;
+
+  /* نصوص داكنة */
+  --text-main: #1c1c1e;
+  --text-sub: #666;
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* =========================================
+      2. إعدادات الجسم والخلفية (Base Layout)
+      ========================================= */
+body {
+  background-color: var(--bg-body);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  padding-bottom: 120px; /* تم استعادة البعد القديم 120px */
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+      3. الكروت والزجاج (Glass Components)
+      ========================================= */
+
+/* الميكس الخاص بالزجاج المبلول */
+.ios-card,
+.header,
+.tab-bar,
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: 20px; /* تم استعادة التقويس القديم */
+}
+
+.ios-card {
+  padding: 18px; /* تم استعادة الـ Padding القديم للحفاظ على الأبعاد */
+  margin-bottom: 15px;
+}
+
+/* =========================================
+      4. الهيدر (Header)
+      ========================================= */
+.header {
+  position: sticky;
+  top: 10px; /* مسافة بسيطة من الأعلى */
+  margin: 0 10px; /* هوامش جانبية */
+  z-index: 1000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+}
+
+/* =========================================
+      5. الشبكات (Grids) - تم استعادة الأبعاد القديمة
+      ========================================= */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; /* تم استعادة الفجوة القديمة */
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; /* تم استعادة الفجوة القديمة */
+}
+
+/* عناصر العمارات */
+.b-item {
+  background: var(--glass-bg); /* استخدام متغير الزجاج */
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 12px 5px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+.b-item:active {
+  transform: scale(0.96);
+}
+.b-item.my-b {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.4);
+}
+
+/* مربعات الشقق */
+.unit-box {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff; /* النص دائماً أبيض داخل المربعات الملونة */
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: 0.2s;
+}
+.unit-box:active {
+  transform: scale(0.95);
+}
+
+.u-txt {
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+}
+
+/* ألوان الحالة (زجاجية ومضيئة) */
+.bg-green {
+  background: linear-gradient(
+    135deg,
+    rgba(48, 209, 88, 0.8),
+    rgba(32, 170, 69, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(48, 209, 88, 0.4);
+}
+.bg-red {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 69, 58, 0.8),
+    rgba(214, 50, 44, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.4);
+}
+.bg-yellow {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 214, 10, 0.8),
+    rgba(240, 185, 11, 0.9)
+  );
+  color: #000;
+  text-shadow: none;
+  box-shadow: 0 4px 15px rgba(255, 214, 10, 0.4);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.dot-green {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+.dot-red {
+  background: var(--danger);
+}
+
+/* =========================================
+      6. المدخلات والأزرار (Inputs & Buttons)
+      ========================================= */
+/* إصلاح مشكلة الألوان في الوضع النهاري */
+.form-control,
+.form-select,
+.login-inp {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-main) !important;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus,
+.login-inp:focus {
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+  border-color: var(--accent) !important;
+}
+
+/* الأزرار */
+.login-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 16px;
+  width: 85%;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 20px rgba(10, 132, 255, 0.4);
+  transition: 0.3s;
+}
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+      7. شاشة الدخول (Login Screen)
+      ========================================= */
+#loginScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* الخلفية تأخذ من البودي لضمان التناسق */
+  background: transparent;
+  backdrop-filter: blur(10px); /* تمويه خفيف فوق الخلفية الأصلية */
+}
+
+/* حقول شاشة الدخول */
+.login-inp {
+  width: 85%;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* النصوص في شاشة الدخول */
+#loginScreen .text-white,
+#loginClock {
+  color: var(--text-main) !important; /* ليتحول للأسود في الوضع النهاري */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+      8. شريط التنقل (Tab Bar)
+      ========================================= */
+/* =========================================
+   8. شريط التنقل (Tab Bar) - تم التعديل
+   ========================================= */
+.tab-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 5%;
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+
+  /* 👇 التعديل هنا: خفضنا الرقم ليكون تحت المودال (المودال 1055) */
+  z-index: 1000;
+
+  border-radius: 40px;
+}
+
+.tab-item {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+}
+.tab-item i {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.tab-item.active {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+      9. إضافات أخرى (Utils)
+      ========================================= */
+.chart-legend {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.legend-item span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.check-item {
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+}
+.check-item input {
+  transform: scale(1.3);
+  margin-bottom: 5px;
+  accent-color: var(--danger);
+}
+
+/* الجداول */
+.table {
+  color: var(--text-main) !important;
+  --bs-table-color: var(--text-main) !important;
+  --bs-table-bg: transparent !important;
+}
+tr {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* زر الإغلاق */
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-theme='light'] .btn-close {
+  filter: none;
+}
+
+/* الجرس */
+.bell-wrap {
+  position: relative;
+  cursor: pointer;
+  padding: 5px;
+}
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--danger);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+}
+.shake {
+  animation: shake 1.5s infinite;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-15deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(15deg);
+  }
+}
+/* =========================================
+   🎬 أنيميشن الدخول السينمائي (Portal Zoom)
+   ========================================= */
+.animate-enter {
+  opacity: 0;
+  transform: scale(0.95) translateY(15px);
+  filter: blur(10px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+#splashScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-body); /* يأخذ لون الخلفية (أسود أو فاتح) */
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+.splash-logo {
+  width: 120px;
+  animation: pulseLogo 1.5s infinite alternate;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(10, 132, 255, 0.3);
+}
+
+@keyframes pulseLogo {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+/* =========================================
+   👋 أنيميشن الخروج (The Deep Exit)
+   ========================================= */
+.animate-exit {
+  transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
+  opacity: 0; /* يختفي */
+  filter: blur(20px); /* يصبح ضبابياً */
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+}
+
+/* =========================================
+   🖥️ تحسين العرض على الكمبيوتر (Desktop Fix)
+   يجعل الموقع يبدو كتطبيق موبايل في المنتصف
+   ========================================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 480px; /* أقصى عرض مثل الموبايل */
+    margin: 0 auto; /* توسيط في منتصف الشاشة */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* حدود جمالية */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* ظل خارجي */
+  }
+
+  /* إصلاح وضعية البار السفلي والشاشة الافتتاحية */
+  .tab-bar,
+  #splashScreen,
+  #loginScreen {
+    max-width: 480px; /* لكي لا يمتدوا بعرض الشاشة */
+    left: 50%;
+    transform: translateX(-50%); /* توسيط */
+  }
+
+  /* تعديل خاص للناف بار ليكون في مكانه الصحيح */
+  .tab-bar {
+    width: 90%; /* يعود 90% من الـ 480px */
+    bottom: 20px;
+  }
+}
+/* =========================================
+    تصميم التوقيع الاحترافي (Signature Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية (لتثبيته في الأسفل) */
+/* =========================================
+    تصميم التوقيع السينمائي العريض (Wide Cinema Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية */
+.signature-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: auto;
+  position: relative;
+  z-index: 100;
+}
+
+/* 2. الشريط العريض (بدلاً من الكبسولة) */
+.glass-capsule {
+  width: 100%;
+  border-radius: 0; /* إلغاء التدوير */
+  display: flex;
+  flex-direction: column; /* العناصر فوق بعض */
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px; /* مساحة واسعة */
+
+  /* الوضع النهاري: شفاف مع خط علوي أنيق */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1)
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* 3. الأيقونة (في المنتصف من الأعلى) */
+.sig-icon {
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 15px; /* مسافة بين الأيقونة والعنوان */
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+/* 4. حاوية النصوص */
+.sig-content {
+  width: 100%;
+  text-align: center; /* توسيط كل شيء */
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter',
+    sans-serif;
+}
+
+/* 5. اسم البراند (التراكي العريض جداً) */
+.sig-brand {
+  /* الوضع النهاري */
+  color: #000000;
+  font-size: 14px; /* حجم مناسب */
+  font-weight: 700;
+  letter-spacing: 8px; /* 🔥 التباعد الكبير المطلوب 🔥 */
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  width: 100%;
+  display: block;
+}
+
+/* 6. اسم المطور (صغير وناعم) */
+.sig-creator {
+  /* الوضع النهاري */
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* 7. السنة (أصغر شيء) */
+.sig-copy {
+  color: #888;
+  font-size: 9px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+/* =========================================
+ 🌙 وضع النيون الليلي (Dark Mode Cinema)
+ ========================================= */
+[data-theme='dark'] .glass-capsule {
+  /* خلفية داكنة شفافة */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+
+  /* خط نيون علوي فقط */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* توهج خفيف من الخط العلوي */
+  box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05);
+}
+
+[data-theme='dark'] .sig-brand {
+  /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme='dark'] .sig-creator {
+  color: #a1a1a6; /* تيتانيوم */
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .sig-copy {
+  color: #6e6e73;
+}
+
+[data-theme='dark'] .sig-icon i {
+  text-shadow: 0 0 15px var(--accent);
+  animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+/* =========================================
+   1. الإعدادات والمتغيرات (Variables & Themes)
+   تم ضبط الألوان لتدعم التبديل بين الوضعين
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  /* --- الوضع الداكن (الافتراضي) - Dark Glass --- */
+  --bg-body: #000000;
+
+  /* خلفية الأورورا للوضع الداكن */
+  --bg-image: radial-gradient(
+      at 0% 0%,
+      hsla(253, 16%, 7%, 1) 0,
+      transparent 50%
+    ),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+
+  /* خصائص الزجاج */
+  --glass-bg: rgba(255, 255, 255, 0.05); /* شفافية عالية */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 25px;
+
+  /* النصوص والعناصر */
+  --text-main: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.7);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* ألوان النظام (Apple Colors) */
+  --accent: #0a84ff;
+  --success: #30d158;
+  --danger: #ff453a;
+  --warning: #ffd60a;
+}
+
+[data-theme='light'] {
+  /* --- الوضع النهاري (الجديد) - Icy Glass --- */
+  --bg-body: #f2f2f7;
+
+  /* خلفية فاتحة متموجة للوضع النهاري */
+  --bg-image: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+
+  /* زجاج ثلجي (أكثر عتامة قليلاً ليظهر على الفاتح) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 30px;
+
+  /* نصوص داكنة */
+  --text-main: #1c1c1e;
+  --text-sub: #666;
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* =========================================
+      2. إعدادات الجسم والخلفية (Base Layout)
+      ========================================= */
+body {
+  background-color: var(--bg-body);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  padding-bottom: 120px; /* تم استعادة البعد القديم 120px */
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+      3. الكروت والزجاج (Glass Components)
+      ========================================= */
+
+/* الميكس الخاص بالزجاج المبلول */
+.ios-card,
+.header,
+.tab-bar,
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: 20px; /* تم استعادة التقويس القديم */
+}
+
+.ios-card {
+  padding: 18px; /* تم استعادة الـ Padding القديم للحفاظ على الأبعاد */
+  margin-bottom: 15px;
+}
+
+/* =========================================
+      4. الهيدر (Header)
+      ========================================= */
+.header {
+  position: sticky;
+  top: 10px; /* مسافة بسيطة من الأعلى */
+  margin: 0 10px; /* هوامش جانبية */
+  z-index: 1000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+}
+
+/* =========================================
+      5. الشبكات (Grids) - تم استعادة الأبعاد القديمة
+      ========================================= */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; /* تم استعادة الفجوة القديمة */
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; /* تم استعادة الفجوة القديمة */
+}
+
+/* عناصر العمارات */
+.b-item {
+  background: var(--glass-bg); /* استخدام متغير الزجاج */
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 12px 5px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+.b-item:active {
+  transform: scale(0.96);
+}
+.b-item.my-b {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.4);
+}
+
+/* مربعات الشقق */
+.unit-box {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff; /* النص دائماً أبيض داخل المربعات الملونة */
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: 0.2s;
+}
+.unit-box:active {
+  transform: scale(0.95);
+}
+
+.u-txt {
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+}
+
+/* ألوان الحالة (زجاجية ومضيئة) */
+.bg-green {
+  background: linear-gradient(
+    135deg,
+    rgba(48, 209, 88, 0.8),
+    rgba(32, 170, 69, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(48, 209, 88, 0.4);
+}
+.bg-red {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 69, 58, 0.8),
+    rgba(214, 50, 44, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.4);
+}
+.bg-yellow {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 214, 10, 0.8),
+    rgba(240, 185, 11, 0.9)
+  );
+  color: #000;
+  text-shadow: none;
+  box-shadow: 0 4px 15px rgba(255, 214, 10, 0.4);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.dot-green {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+.dot-red {
+  background: var(--danger);
+}
+
+/* =========================================
+      6. المدخلات والأزرار (Inputs & Buttons)
+      ========================================= */
+/* إصلاح مشكلة الألوان في الوضع النهاري */
+.form-control,
+.form-select,
+.login-inp {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-main) !important;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus,
+.login-inp:focus {
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+  border-color: var(--accent) !important;
+}
+
+/* الأزرار */
+.login-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 16px;
+  width: 85%;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 20px rgba(10, 132, 255, 0.4);
+  transition: 0.3s;
+}
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+      7. شاشة الدخول (Login Screen)
+      ========================================= */
+#loginScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* الخلفية تأخذ من البودي لضمان التناسق */
+  background: transparent;
+  backdrop-filter: blur(10px); /* تمويه خفيف فوق الخلفية الأصلية */
+}
+
+/* حقول شاشة الدخول */
+.login-inp {
+  width: 85%;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* النصوص في شاشة الدخول */
+#loginScreen .text-white,
+#loginClock {
+  color: var(--text-main) !important; /* ليتحول للأسود في الوضع النهاري */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+      8. شريط التنقل (Tab Bar)
+      ========================================= */
+/* =========================================
+   8. شريط التنقل (Tab Bar) - تم التعديل
+   ========================================= */
+.tab-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 5%;
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+
+  /* 👇 التعديل هنا: خفضنا الرقم ليكون تحت المودال (المودال 1055) */
+  z-index: 1000;
+
+  border-radius: 40px;
+}
+
+.tab-item {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+}
+.tab-item i {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.tab-item.active {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+      9. إضافات أخرى (Utils)
+      ========================================= */
+.chart-legend {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.legend-item span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.check-item {
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+}
+.check-item input {
+  transform: scale(1.3);
+  margin-bottom: 5px;
+  accent-color: var(--danger);
+}
+
+/* الجداول */
+.table {
+  color: var(--text-main) !important;
+  --bs-table-color: var(--text-main) !important;
+  --bs-table-bg: transparent !important;
+}
+tr {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* زر الإغلاق */
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-theme='light'] .btn-close {
+  filter: none;
+}
+
+/* الجرس */
+.bell-wrap {
+  position: relative;
+  cursor: pointer;
+  padding: 5px;
+}
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--danger);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+}
+.shake {
+  animation: shake 1.5s infinite;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-15deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(15deg);
+  }
+}
+/* =========================================
+   🎬 أنيميشن الدخول السينمائي (Portal Zoom)
+   ========================================= */
+.animate-enter {
+  opacity: 0;
+  transform: scale(0.95) translateY(15px);
+  filter: blur(10px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+#splashScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-body); /* يأخذ لون الخلفية (أسود أو فاتح) */
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+.splash-logo {
+  width: 120px;
+  animation: pulseLogo 1.5s infinite alternate;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(10, 132, 255, 0.3);
+}
+
+@keyframes pulseLogo {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+/* =========================================
+   👋 أنيميشن الخروج (The Deep Exit)
+   ========================================= */
+.animate-exit {
+  transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
+  opacity: 0; /* يختفي */
+  filter: blur(20px); /* يصبح ضبابياً */
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+}
+
+/* =========================================
+   🖥️ تحسين العرض على الكمبيوتر (Desktop Fix)
+   يجعل الموقع يبدو كتطبيق موبايل في المنتصف
+   ========================================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 480px; /* أقصى عرض مثل الموبايل */
+    margin: 0 auto; /* توسيط في منتصف الشاشة */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* حدود جمالية */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* ظل خارجي */
+  }
+
+  /* إصلاح وضعية البار السفلي والشاشة الافتتاحية */
+  .tab-bar,
+  #splashScreen,
+  #loginScreen {
+    max-width: 480px; /* لكي لا يمتدوا بعرض الشاشة */
+    left: 50%;
+    transform: translateX(-50%); /* توسيط */
+  }
+
+  /* تعديل خاص للناف بار ليكون في مكانه الصحيح */
+  .tab-bar {
+    width: 90%; /* يعود 90% من الـ 480px */
+    bottom: 20px;
+  }
+}
+/* =========================================
+    تصميم التوقيع الاحترافي (Signature Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية (لتثبيته في الأسفل) */
+/* =========================================
+    تصميم التوقيع السينمائي العريض (Wide Cinema Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية */
+.signature-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: auto;
+  position: relative;
+  z-index: 100;
+}
+
+/* 2. الشريط العريض (بدلاً من الكبسولة) */
+.glass-capsule {
+  width: 100%;
+  border-radius: 0; /* إلغاء التدوير */
+  display: flex;
+  flex-direction: column; /* العناصر فوق بعض */
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px; /* مساحة واسعة */
+
+  /* الوضع النهاري: شفاف مع خط علوي أنيق */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1)
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* 3. الأيقونة (في المنتصف من الأعلى) */
+.sig-icon {
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 15px; /* مسافة بين الأيقونة والعنوان */
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+/* 4. حاوية النصوص */
+.sig-content {
+  width: 100%;
+  text-align: center; /* توسيط كل شيء */
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter',
+    sans-serif;
+}
+
+/* 5. اسم البراند (التراكي العريض جداً) */
+.sig-brand {
+  /* الوضع النهاري */
+  color: #000000;
+  font-size: 14px; /* حجم مناسب */
+  font-weight: 700;
+  letter-spacing: 8px; /* 🔥 التباعد الكبير المطلوب 🔥 */
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  width: 100%;
+  display: block;
+}
+
+/* 6. اسم المطور (صغير وناعم) */
+.sig-creator {
+  /* الوضع النهاري */
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* 7. السنة (أصغر شيء) */
+.sig-copy {
+  color: #888;
+  font-size: 9px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+/* =========================================
+ 🌙 وضع النيون الليلي (Dark Mode Cinema)
+ ========================================= */
+[data-theme='dark'] .glass-capsule {
+  /* خلفية داكنة شفافة */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+
+  /* خط نيون علوي فقط */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* توهج خفيف من الخط العلوي */
+  box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05);
+}
+
+[data-theme='dark'] .sig-brand {
+  /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme='dark'] .sig-creator {
+  color: #a1a1a6; /* تيتانيوم */
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .sig-copy {
+  color: #6e6e73;
+}
+
+[data-theme='dark'] .sig-icon i {
+  text-shadow: 0 0 15px var(--accent);
+  animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+/* =========================================
+   1. الإعدادات والمتغيرات (Variables & Themes)
+   تم ضبط الألوان لتدعم التبديل بين الوضعين
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  /* --- الوضع الداكن (الافتراضي) - Dark Glass --- */
+  --bg-body: #000000;
+
+  /* خلفية الأورورا للوضع الداكن */
+  --bg-image: radial-gradient(
+      at 0% 0%,
+      hsla(253, 16%, 7%, 1) 0,
+      transparent 50%
+    ),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+
+  /* خصائص الزجاج */
+  --glass-bg: rgba(255, 255, 255, 0.05); /* شفافية عالية */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 25px;
+
+  /* النصوص والعناصر */
+  --text-main: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.7);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* ألوان النظام (Apple Colors) */
+  --accent: #0a84ff;
+  --success: #30d158;
+  --danger: #ff453a;
+  --warning: #ffd60a;
+}
+
+[data-theme='light'] {
+  /* --- الوضع النهاري (الجديد) - Icy Glass --- */
+  --bg-body: #f2f2f7;
+
+  /* خلفية فاتحة متموجة للوضع النهاري */
+  --bg-image: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+
+  /* زجاج ثلجي (أكثر عتامة قليلاً ليظهر على الفاتح) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 30px;
+
+  /* نصوص داكنة */
+  --text-main: #1c1c1e;
+  --text-sub: #666;
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* =========================================
+      2. إعدادات الجسم والخلفية (Base Layout)
+      ========================================= */
+body {
+  background-color: var(--bg-body);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  padding-bottom: 120px; /* تم استعادة البعد القديم 120px */
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+      3. الكروت والزجاج (Glass Components)
+      ========================================= */
+
+/* الميكس الخاص بالزجاج المبلول */
+.ios-card,
+.header,
+.tab-bar,
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: 20px; /* تم استعادة التقويس القديم */
+}
+
+.ios-card {
+  padding: 18px; /* تم استعادة الـ Padding القديم للحفاظ على الأبعاد */
+  margin-bottom: 15px;
+}
+
+/* =========================================
+      4. الهيدر (Header)
+      ========================================= */
+.header {
+  position: sticky;
+  top: 10px; /* مسافة بسيطة من الأعلى */
+  margin: 0 10px; /* هوامش جانبية */
+  z-index: 1000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+}
+
+/* =========================================
+      5. الشبكات (Grids) - تم استعادة الأبعاد القديمة
+      ========================================= */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; /* تم استعادة الفجوة القديمة */
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; /* تم استعادة الفجوة القديمة */
+}
+
+/* عناصر العمارات */
+.b-item {
+  background: var(--glass-bg); /* استخدام متغير الزجاج */
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 12px 5px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+.b-item:active {
+  transform: scale(0.96);
+}
+.b-item.my-b {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.4);
+}
+
+/* مربعات الشقق */
+.unit-box {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff; /* النص دائماً أبيض داخل المربعات الملونة */
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: 0.2s;
+}
+.unit-box:active {
+  transform: scale(0.95);
+}
+
+.u-txt {
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+}
+
+/* ألوان الحالة (زجاجية ومضيئة) */
+.bg-green {
+  background: linear-gradient(
+    135deg,
+    rgba(48, 209, 88, 0.8),
+    rgba(32, 170, 69, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(48, 209, 88, 0.4);
+}
+.bg-red {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 69, 58, 0.8),
+    rgba(214, 50, 44, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.4);
+}
+.bg-yellow {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 214, 10, 0.8),
+    rgba(240, 185, 11, 0.9)
+  );
+  color: #000;
+  text-shadow: none;
+  box-shadow: 0 4px 15px rgba(255, 214, 10, 0.4);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.dot-green {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+.dot-red {
+  background: var(--danger);
+}
+
+/* =========================================
+      6. المدخلات والأزرار (Inputs & Buttons)
+      ========================================= */
+/* إصلاح مشكلة الألوان في الوضع النهاري */
+.form-control,
+.form-select,
+.login-inp {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-main) !important;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus,
+.login-inp:focus {
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+  border-color: var(--accent) !important;
+}
+
+/* الأزرار */
+.login-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 16px;
+  width: 85%;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 20px rgba(10, 132, 255, 0.4);
+  transition: 0.3s;
+}
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+      7. شاشة الدخول (Login Screen)
+      ========================================= */
+#loginScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* الخلفية تأخذ من البودي لضمان التناسق */
+  background: transparent;
+  backdrop-filter: blur(10px); /* تمويه خفيف فوق الخلفية الأصلية */
+}
+
+/* حقول شاشة الدخول */
+.login-inp {
+  width: 85%;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* النصوص في شاشة الدخول */
+#loginScreen .text-white,
+#loginClock {
+  color: var(--text-main) !important; /* ليتحول للأسود في الوضع النهاري */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+      8. شريط التنقل (Tab Bar)
+      ========================================= */
+/* =========================================
+   8. شريط التنقل (Tab Bar) - تم التعديل
+   ========================================= */
+.tab-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 5%;
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+
+  /* 👇 التعديل هنا: خفضنا الرقم ليكون تحت المودال (المودال 1055) */
+  z-index: 1000;
+
+  border-radius: 40px;
+}
+
+.tab-item {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+}
+.tab-item i {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.tab-item.active {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+      9. إضافات أخرى (Utils)
+      ========================================= */
+.chart-legend {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.legend-item span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.check-item {
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+}
+.check-item input {
+  transform: scale(1.3);
+  margin-bottom: 5px;
+  accent-color: var(--danger);
+}
+
+/* الجداول */
+.table {
+  color: var(--text-main) !important;
+  --bs-table-color: var(--text-main) !important;
+  --bs-table-bg: transparent !important;
+}
+tr {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* زر الإغلاق */
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-theme='light'] .btn-close {
+  filter: none;
+}
+
+/* الجرس */
+.bell-wrap {
+  position: relative;
+  cursor: pointer;
+  padding: 5px;
+}
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--danger);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+}
+.shake {
+  animation: shake 1.5s infinite;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-15deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(15deg);
+  }
+}
+/* =========================================
+   🎬 أنيميشن الدخول السينمائي (Portal Zoom)
+   ========================================= */
+.animate-enter {
+  opacity: 0;
+  transform: scale(0.95) translateY(15px);
+  filter: blur(10px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+#splashScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-body); /* يأخذ لون الخلفية (أسود أو فاتح) */
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+.splash-logo {
+  width: 120px;
+  animation: pulseLogo 1.5s infinite alternate;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(10, 132, 255, 0.3);
+}
+
+@keyframes pulseLogo {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+/* =========================================
+   👋 أنيميشن الخروج (The Deep Exit)
+   ========================================= */
+.animate-exit {
+  transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
+  opacity: 0; /* يختفي */
+  filter: blur(20px); /* يصبح ضبابياً */
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+}
+
+/* =========================================
+   🖥️ تحسين العرض على الكمبيوتر (Desktop Fix)
+   يجعل الموقع يبدو كتطبيق موبايل في المنتصف
+   ========================================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 480px; /* أقصى عرض مثل الموبايل */
+    margin: 0 auto; /* توسيط في منتصف الشاشة */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* حدود جمالية */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* ظل خارجي */
+  }
+
+  /* إصلاح وضعية البار السفلي والشاشة الافتتاحية */
+  .tab-bar,
+  #splashScreen,
+  #loginScreen {
+    max-width: 480px; /* لكي لا يمتدوا بعرض الشاشة */
+    left: 50%;
+    transform: translateX(-50%); /* توسيط */
+  }
+
+  /* تعديل خاص للناف بار ليكون في مكانه الصحيح */
+  .tab-bar {
+    width: 90%; /* يعود 90% من الـ 480px */
+    bottom: 20px;
+  }
+}
+/* =========================================
+    تصميم التوقيع الاحترافي (Signature Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية (لتثبيته في الأسفل) */
+/* =========================================
+    تصميم التوقيع السينمائي العريض (Wide Cinema Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية */
+.signature-container {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-top: auto;
+  position: relative;
+  z-index: 100;
+}
+
+/* 2. الشريط العريض (بدلاً من الكبسولة) */
+.glass-capsule {
+  width: 100%;
+  border-radius: 0; /* إلغاء التدوير */
+  display: flex;
+  flex-direction: column; /* العناصر فوق بعض */
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px; /* مساحة واسعة */
+
+  /* الوضع النهاري: شفاف مع خط علوي أنيق */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1)
+  );
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* 3. الأيقونة (في المنتصف من الأعلى) */
+.sig-icon {
+  font-size: 20px;
+  color: var(--accent);
+  margin-bottom: 15px; /* مسافة بين الأيقونة والعنوان */
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+/* 4. حاوية النصوص */
+.sig-content {
+  width: 100%;
+  text-align: center; /* توسيط كل شيء */
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter',
+    sans-serif;
+}
+
+/* 5. اسم البراند (التراكي العريض جداً) */
+.sig-brand {
+  /* الوضع النهاري */
+  color: #000000;
+  font-size: 14px; /* حجم مناسب */
+  font-weight: 700;
+  letter-spacing: 8px; /* 🔥 التباعد الكبير المطلوب 🔥 */
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  width: 100%;
+  display: block;
+}
+
+/* 6. اسم المطور (صغير وناعم) */
+.sig-creator {
+  /* الوضع النهاري */
+  color: #555;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* 7. السنة (أصغر شيء) */
+.sig-copy {
+  color: #888;
+  font-size: 9px;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+/* =========================================
+ 🌙 وضع النيون الليلي (Dark Mode Cinema)
+ ========================================= */
+[data-theme='dark'] .glass-capsule {
+  /* خلفية داكنة شفافة */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+
+  /* خط نيون علوي فقط */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* توهج خفيف من الخط العلوي */
+  box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05);
+}
+
+[data-theme='dark'] .sig-brand {
+  /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme='dark'] .sig-creator {
+  color: #a1a1a6; /* تيتانيوم */
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .sig-copy {
+  color: #6e6e73;
+}
+
+[data-theme='dark'] .sig-icon i {
+  text-shadow: 0 0 15px var(--accent);
+  animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
+/* =========================================
+   1. الإعدادات والمتغيرات (Variables & Themes)
+   تم ضبط الألوان لتدعم التبديل بين الوضعين
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  /* --- الوضع الداكن (الافتراضي) - Dark Glass --- */
+  --bg-body: #000000;
+
+  /* خلفية الأورورا للوضع الداكن */
+  --bg-image: radial-gradient(
+      at 0% 0%,
+      hsla(253, 16%, 7%, 1) 0,
+      transparent 50%
+    ),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+
+  /* خصائص الزجاج */
+  --glass-bg: rgba(255, 255, 255, 0.05); /* شفافية عالية */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 25px;
+
+  /* النصوص والعناصر */
+  --text-main: #ffffff;
+  --text-sub: rgba(255, 255, 255, 0.7);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+  /* ألوان النظام (Apple Colors) */
+  --accent: #0a84ff;
+  --success: #30d158;
+  --danger: #ff453a;
+  --warning: #ffd60a;
+}
+
+[data-theme='light'] {
+  /* --- الوضع النهاري (الجديد) - Icy Glass --- */
+  --bg-body: #f2f2f7;
+
+  /* خلفية فاتحة متموجة للوضع النهاري */
+  --bg-image: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+
+  /* زجاج ثلجي (أكثر عتامة قليلاً ليظهر على الفاتح) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-blur: 30px;
+
+  /* نصوص داكنة */
+  --text-main: #1c1c1e;
+  --text-sub: #666;
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+}
+
+/* =========================================
+      2. إعدادات الجسم والخلفية (Base Layout)
+      ========================================= */
+body {
+  background-color: var(--bg-body);
+  background-image: var(--bg-image);
+  background-attachment: fixed;
+  background-size: cover;
+  color: var(--text-main);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  padding-bottom: 120px; /* تم استعادة البعد القديم 120px */
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================
+      3. الكروت والزجاج (Glass Components)
+      ========================================= */
+
+/* الميكس الخاص بالزجاج المبلول */
+.ios-card,
+.header,
+.tab-bar,
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow);
+  border-radius: 20px; /* تم استعادة التقويس القديم */
+}
+
+.ios-card {
+  padding: 18px; /* تم استعادة الـ Padding القديم للحفاظ على الأبعاد */
+  margin-bottom: 15px;
+}
+
+/* =========================================
+      4. الهيدر (Header)
+      ========================================= */
+.header {
+  position: sticky;
+  top: 10px; /* مسافة بسيطة من الأعلى */
+  margin: 0 10px; /* هوامش جانبية */
+  z-index: 1000;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 20px;
+}
+
+/* =========================================
+      5. الشبكات (Grids) - تم استعادة الأبعاد القديمة
+      ========================================= */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; /* تم استعادة الفجوة القديمة */
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; /* تم استعادة الفجوة القديمة */
+}
+
+/* عناصر العمارات */
+.b-item {
+  background: var(--glass-bg); /* استخدام متغير الزجاج */
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 12px 5px;
+  text-align: center;
+  transition: 0.2s;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+.b-item:active {
+  transform: scale(0.96);
+}
+.b-item.my-b {
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 15px rgba(10, 132, 255, 0.4);
+}
+
+/* مربعات الشقق */
+.unit-box {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #fff; /* النص دائماً أبيض داخل المربعات الملونة */
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: 0.2s;
+}
+.unit-box:active {
+  transform: scale(0.95);
+}
+
+.u-txt {
+  font-size: 9px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-top: 3px;
+}
+
+/* ألوان الحالة (زجاجية ومضيئة) */
+.bg-green {
+  background: linear-gradient(
+    135deg,
+    rgba(48, 209, 88, 0.8),
+    rgba(32, 170, 69, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(48, 209, 88, 0.4);
+}
+.bg-red {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 69, 58, 0.8),
+    rgba(214, 50, 44, 0.9)
+  );
+  box-shadow: 0 4px 15px rgba(255, 69, 58, 0.4);
+}
+.bg-yellow {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 214, 10, 0.8),
+    rgba(240, 185, 11, 0.9)
+  );
+  color: #000;
+  text-shadow: none;
+  box-shadow: 0 4px 15px rgba(255, 214, 10, 0.4);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+.dot-green {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success);
+}
+.dot-red {
+  background: var(--danger);
+}
+
+/* =========================================
+      6. المدخلات والأزرار (Inputs & Buttons)
+      ========================================= */
+/* إصلاح مشكلة الألوان في الوضع النهاري */
+.form-control,
+.form-select,
+.login-inp {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-main) !important;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus,
+.login-inp:focus {
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3);
+  border-color: var(--accent) !important;
+}
+
+/* الأزرار */
+.login-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 16px;
+  width: 85%;
+  border-radius: 14px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 20px rgba(10, 132, 255, 0.4);
+  transition: 0.3s;
+}
+.login-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+      7. شاشة الدخول (Login Screen)
+      ========================================= */
+#loginScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* الخلفية تأخذ من البودي لضمان التناسق */
+  background: transparent;
+  backdrop-filter: blur(10px); /* تمويه خفيف فوق الخلفية الأصلية */
+}
+
+/* حقول شاشة الدخول */
+.login-inp {
+  width: 85%;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* النصوص في شاشة الدخول */
+#loginScreen .text-white,
+#loginClock {
+  color: var(--text-main) !important; /* ليتحول للأسود في الوضع النهاري */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+      8. شريط التنقل (Tab Bar)
+      ========================================= */
+/* =========================================
+   8. شريط التنقل (Tab Bar) - تم التعديل
+   ========================================= */
+.tab-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 5%;
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 0;
+
+  /* 👇 التعديل هنا: خفضنا الرقم ليكون تحت المودال (المودال 1055) */
+  z-index: 1000;
+
+  border-radius: 40px;
+}
+
+.tab-item {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.3s;
+}
+.tab-item i {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.tab-item.active {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* =========================================
+      9. إضافات أخرى (Utils)
+      ========================================= */
+.chart-legend {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.legend-item span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.check-item {
+  background: var(--glass-bg);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+}
+.check-item input {
+  transform: scale(1.3);
+  margin-bottom: 5px;
+  accent-color: var(--danger);
+}
+
+/* الجداول */
+.table {
+  color: var(--text-main) !important;
+  --bs-table-color: var(--text-main) !important;
+  --bs-table-bg: transparent !important;
+}
+tr {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* زر الإغلاق */
+.btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-theme='light'] .btn-close {
+  filter: none;
+}
+
+/* الجرس */
+.bell-wrap {
+  position: relative;
+  cursor: pointer;
+  padding: 5px;
+}
+.bell-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--danger);
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+}
+.shake {
+  animation: shake 1.5s infinite;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: rotate(-15deg);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: rotate(15deg);
+  }
+}
+/* =========================================
+   🎬 أنيميشن الدخول السينمائي (Portal Zoom)
+   ========================================= */
+.animate-enter {
+  opacity: 0;
+  transform: scale(0.95) translateY(15px);
+  filter: blur(10px);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animate-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+#splashScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-body); /* يأخذ لون الخلفية (أسود أو فاتح) */
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease;
+}
+
+.splash-logo {
+  width: 120px;
+  animation: pulseLogo 1.5s infinite alternate;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(10, 132, 255, 0.3);
+}
+
+@keyframes pulseLogo {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+/* =========================================
+   👋 أنيميشن الخروج (The Deep Exit)
+   ========================================= */
+.animate-exit {
+  transform: scale(0.9) translateY(20px); /* يصغر وينزل للأسفل */
+  opacity: 0; /* يختفي */
+  filter: blur(20px); /* يصبح ضبابياً */
+  transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19); /* حركة سريعة في البداية */
+}
+
+/* =========================================
+   🖥️ تحسين العرض على الكمبيوتر (Desktop Fix)
+   يجعل الموقع يبدو كتطبيق موبايل في المنتصف
+   ========================================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 480px; /* أقصى عرض مثل الموبايل */
+    margin: 0 auto; /* توسيط في منتصف الشاشة */
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* حدود جمالية */
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 100vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5); /* ظل خارجي */
+  }
+
+  /* إصلاح وضعية البار السفلي والشاشة الافتتاحية */
+  .tab-bar,
+  #splashScreen,
+  #loginScreen {
+    max-width: 480px; /* لكي لا يمتدوا بعرض الشاشة */
+    left: 50%;
+    transform: translateX(-50%); /* توسيط */
+  }
+
+  /* تعديل خاص للناف بار ليكون في مكانه الصحيح */
+  .tab-bar {
+    width: 90%; /* يعود 90% من الـ 480px */
+    bottom: 20px;
+  }
+}
+/* =========================================
+    تصميم التوقيع السينمائي العريض (Wide Cinema Pro)
+   ========================================= */
+
+/* 1. الحاوية الرئيسية */
+.signature-container {
+    width: 100%;
+    padding: 0; 
+    margin: 0;
+    margin-top: auto;
+    position: relative;
+    z-index: 100;
+}
+
+/* 2. الشريط العريض (بدلاً من الكبسولة) */
+.glass-capsule {
+    width: 100%;
+    border-radius: 0; /* إلغاء التدوير */
+    display: flex;
+    flex-direction: column; /* العناصر فوق بعض */
+    align-items: center;
+    justify-content: center;
+    padding: 30px 10px; /* مساحة واسعة */
+    
+    /* الوضع النهاري: شفاف مع خط علوي أنيق */
+    background: linear-gradient(to bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.1); 
+    border-bottom: none; border-left: none; border-right: none;
+}
+
+/* 3. الأيقونة (في المنتصف من الأعلى) */
+.sig-icon {
+    font-size: 20px;
+    color: var(--accent);
+    margin-bottom: 15px; /* مسافة بين الأيقونة والعنوان */
+    opacity: 0.9;
+    transition: 0.3s;
+}
+
+/* 4. حاوية النصوص */
+.sig-content {
+    width: 100%;
+    text-align: center; /* توسيط كل شيء */
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+}
+
+/* 5. اسم البراند (التراكي العريض جداً) */
+.sig-brand {
+    /* الوضع النهاري */
+    color: #000000;
+    font-size: 14px; /* حجم مناسب */
+    font-weight: 700;
+    letter-spacing: 8px; /* 🔥 التباعد الكبير المطلوب 🔥 */
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    width: 100%;
+    display: block;
+}
+
+/* 6. اسم المطور (صغير وناعم) */
+.sig-creator {
+    /* الوضع النهاري */
+    color: #555;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+/* 7. السنة (أصغر شيء) */
+.sig-copy {
+    color: #888;
+    font-size: 9px;
+    margin-top: 4px;
+    opacity: 0.6;
+}
+
+/* =========================================
+   🌙 وضع النيون الليلي (Dark Mode Cinema)
+   ========================================= */
+[data-theme="dark"] .glass-capsule {
+    /* خلفية داكنة شفافة */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+    
+    /* خط نيون علوي فقط */
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    
+    /* توهج خفيف من الخط العلوي */
+    box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05); 
+}
+
+[data-theme="dark"] .sig-brand {
+    /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+    color: #FFFFFF;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme="dark"] .sig-creator {
+    color: #A1A1A6; /* تيتانيوم */
+    opacity: 0.8;
+}
+
+[data-theme="dark"] .sig-copy {
+    color: #6E6E73;
+}
+
+[data-theme="dark"] .sig-icon i {
+    text-shadow: 0 0 15px var(--accent);
+    animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.15); filter: brightness(1.3); }
+}
+/* =========================================
+ 🌙 وضع النيون الليلي (Dark Mode Cinema)
+ ========================================= */
+[data-theme='dark'] .glass-capsule {
+  /* خلفية داكنة شفافة */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), transparent);
+
+  /* خط نيون علوي فقط */
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* توهج خفيف من الخط العلوي */
+  box-shadow: 0 -10px 20px rgba(10, 132, 255, 0.05);
+}
+
+[data-theme='dark'] .sig-brand {
+  /* 🔥 أبيض ناصع مع تباعد الأحرف 🔥 */
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* وهج الليزر */
+}
+
+[data-theme='dark'] .sig-creator {
+  color: #a1a1a6; /* تيتانيوم */
+  opacity: 0.8;
+}
+
+[data-theme='dark'] .sig-copy {
+  color: #6e6e73;
+}
+
+[data-theme='dark'] .sig-icon i {
+  text-shadow: 0 0 15px var(--accent);
+  animation: iconPulse 3s infinite alternate;
+}
+
+/* أنيميشن نبض الأيقونة */
+@keyframes iconPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+    filter: brightness(1.3);
+  }
+}
